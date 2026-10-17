@@ -64,8 +64,7 @@
       "offers": { "@type": "Offer", "price": "0", "priceCurrency": "JPY" },
       "featureList": [
         "カメラによる照度（lx / fc）と色温度（K）の推定",
-        "HOLD・MAX/MIN・5秒平均・測定値の記録（場所名つき）",
-        "1日の照度の推移グラフとCSV書き出し",
+        "HOLD・MAX/MIN・5秒平均",
         "場所・時間帯ごとの照度の目安と判定",
         "ライト／ダークテーマ・英語表示",
         "オフライン動作・ホーム画面への追加"
@@ -118,7 +117,6 @@
     --input-bg: #12161a; --input-edge: #3a434e;
     --accent: #f2bd2a; --accent-ink: #f2bd2a;
     --ok: #5cc98a; --warn: #f2b544; --bad: #ef6b5b;
-    --series: #f2bd2a; --band: rgba(92, 201, 138, .16); --grid: rgba(255,255,255,.08);
     --toast-bg: #f2f2f0; --toast-fg: #1b1d20;
     --mono: "LX Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
     /* 縦持ちで本体が1画面に収まるよう、受光部の大きさを画面の高さから決める */
@@ -135,7 +133,6 @@
     --input-bg: #ffffff; --input-edge: #c5ccd3;
     --accent-ink: #855c00;
     --ok: #1b7a44; --warn: #915e00; --bad: #b9372a;
-    --series: #a87400; --band: rgba(27, 122, 68, .13); --grid: rgba(0,0,0,.08);
     --toast-bg: #1f2328; --toast-fg: #f2f2f0;
     color-scheme: light;
   }
@@ -149,7 +146,6 @@
       --input-bg: #ffffff; --input-edge: #c5ccd3;
       --accent-ink: #855c00;
       --ok: #1b7a44; --warn: #915e00; --bad: #b9372a;
-      --series: #a87400; --band: rgba(27, 122, 68, .13); --grid: rgba(0,0,0,.08);
       --toast-bg: #1f2328; --toast-fg: #f2f2f0;
       color-scheme: light;
     }
@@ -325,10 +321,8 @@
   .key small { display: block; font-size: 9.5px; font-weight: 500; letter-spacing: 0; color: #a7b0b9; margin-top: 3px; white-space: nowrap; }
   .key:active, .key.pressed { transform: translateY(2px); box-shadow: 0 1px 0 #141619, 0 2px 3px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.08); }
   .key.lit { color: var(--accent); }
-  .key.wide { grid-column: span 2; }
-  .rec-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #ff5a4a; margin-right: 6px; vertical-align: 1px; }
   .key.power {
-    grid-column: 1 / -1; min-height: 50px;
+    grid-column: span 2; min-height: 48px;
     background: linear-gradient(180deg, #d9483b 0%, #b5342a 100%);
     box-shadow: 0 3px 0 #641a14, 0 5px 7px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.22);
     font-size: 13.5px;
@@ -346,7 +340,7 @@
     .maker span { display: none; }
     .keys { gap: 7px 7px; margin-top: 10px; }
     .key { min-height: 44px; }
-    .key.power { min-height: 46px; }
+    .key.power { min-height: 44px; }
   }
   /* 幅の狭いスマホ */
   @media (max-width: 380px) {
@@ -377,55 +371,18 @@
   .chip.active { background: var(--chip-on-bg); border-color: var(--accent); color: var(--chip-on); }
   .chip:disabled { opacity: .4; cursor: default; }
   .verdict { font-weight: 800; font-size: 18px; }
+  .ic { display: inline-block; width: 1.45em; text-align: center; font-style: normal; }
   .range { color: var(--muted); font-size: 12.5px; }
   .tip { margin: 6px 0 0; font-size: 13px; }
   .adv { margin: 8px 0 0; padding: 8px 10px; border-radius: 10px; background: var(--chip); border: 1px solid var(--chip-edge); font-size: 13px; }
   .cct { margin: 8px 0 0; padding-top: 8px; border-top: 1px solid var(--card-edge); font-size: 13px; }
 
-  /* 記録 */
-  .room-row { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; font-size: 13px; color: var(--muted); }
-  .room-row input { flex: 1; min-width: 0; }
+  /* 入力欄（補正） */
   input.field {
     font: 15px system-ui, sans-serif; padding: 9px 11px; border-radius: 10px; min-height: 42px;
     border: 1px solid var(--input-edge); background: var(--input-bg); color: var(--text);
   }
   input.num { font-family: var(--mono); width: 116px; }
-  .log { list-style: none; margin: 0; padding: 0; }
-  .log li { display: grid; grid-template-columns: auto 1fr auto; gap: 10px; align-items: baseline; padding: 7px 0; border-top: 1px solid var(--card-edge); font-size: 13px; }
-  .log li:first-child { border-top: 0; }
-  .log time { color: var(--muted); font: 12px var(--mono); }
-  .log .v { font: 15px var(--mono); text-align: right; }
-  .log .v small { color: var(--muted); font-size: 11px; margin-left: 6px; }
-  .log .p { color: var(--soft); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .log-empty, .log-more { color: var(--muted); font-size: 13px; margin: 0; }
-  .log-more { margin-top: 6px; font-size: 12px; }
-  .log-actions { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
-
-  /* 推移グラフ */
-  .trend-nav { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 4px; }
-  .trend-nav b { font-size: 14px; }
-  .trend-nav .chip { min-width: 44px; padding: 7px 0; }
-  .trend { position: relative; }
-  .trend svg { display: block; width: 100%; height: auto; touch-action: pan-y; }
-  .trend text { font: 10.5px system-ui, sans-serif; fill: var(--muted); }
-  .trend .grid { stroke: var(--grid); stroke-width: 1; }
-  .trend .band { fill: var(--band); }
-  .trend .line { fill: none; stroke: var(--series); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
-  .trend .dot { fill: var(--series); stroke: var(--card); stroke-width: 2; }
-  .trend .nowline { stroke: var(--muted); stroke-width: 1; stroke-dasharray: 3 3; opacity: .7; }
-  .trend .cross { stroke: var(--muted); stroke-width: 1; }
-  .trend .hl { fill: none; stroke: var(--text); stroke-width: 2; }
-  .tipbox {
-    position: absolute; z-index: 2; pointer-events: none; white-space: nowrap;
-    background: var(--card); color: var(--text); border: 1px solid var(--card-edge); border-radius: 10px;
-    padding: 6px 10px; font-size: 12px; line-height: 1.4; box-shadow: 0 6px 16px rgba(0,0,0,.3);
-    transform: translate(-50%, calc(-100% - 12px));
-  }
-  .tipbox.below { transform: translate(-50%, 12px); }
-  .tipbox b { font: 15px var(--mono); }
-  .tipbox span { color: var(--muted); }
-  .trend-cap { color: var(--muted); font-size: 12px; margin: 6px 0 0; }
-
   /* 早見表（印刷ラベル風） */
   .paper {
     background: #f3efe3; color: #2b2925; border-radius: 6px; padding: 14px 16px 10px;
@@ -504,7 +461,6 @@
             <span class="ann" id="aMin">MIN</span>
             <span class="ann" id="aRel">REL</span>
             <span class="ann" id="aOver">OVER</span>
-            <span class="ann" id="aMem">MEM</span>
           </div>
           <div class="main" aria-hidden="true">
             <svg id="seg" viewBox="0 0 330 96"></svg>
@@ -528,8 +484,7 @@
         <button class="key" id="kAvg">AVG<small data-i18n="kAvgSub">5秒平均</small></button>
         <button class="key" id="kUnit">UNIT<small>lx / fc</small></button>
         <button class="key" id="kLight">LIGHT<small data-i18n="kLightSub">照明</small></button>
-        <button class="key" id="kCam">SENSOR<small data-i18n="kCamSub">前／後</small></button>
-        <button class="key wide" id="kRec"><i class="rec-dot"></i>REC<small data-i18n="kRecSub">いまの値を記録</small></button>
+        <button class="key" id="kCam">CAMERA<small id="kCamSub"></small></button>
         <button class="key power" id="kPower"><svg class="pwr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M12 3v8"/><path d="M6.3 6.8a8 8 0 1 0 11.4 0"/></svg>POWER<small id="kPowerSub">測定開始</small></button>
       </div>
       <div class="spec">AUTO RANGE 0.1–99,999 lx · CCT</div>
@@ -548,40 +503,6 @@
     </div>
   </section>
 
-  <section id="log">
-    <h2 data-i18n="hLog">測定記録</h2>
-    <div class="card">
-      <label class="room-row"><span data-i18n="roomLabel">記録する場所</span>
-        <input class="field" id="room" list="roomList" maxlength="30" autocomplete="off" data-i18n-ph="roomPh" placeholder="例：リビング">
-      </label>
-      <datalist id="roomList"></datalist>
-      <ul class="log" id="logList"></ul>
-      <p class="log-empty" id="logEmpty" data-i18n="logEmpty">REC を押すと、いまの値を時刻・場所つきで記録します。部屋ごとの比較に便利です。</p>
-      <p class="log-more" id="logMore" hidden></p>
-      <div class="log-actions" id="logActions" hidden>
-        <button class="chip" id="logShare" data-i18n="logShare">記録を共有</button>
-        <button class="chip" id="logCsv" data-i18n="logCsv">CSV 保存</button>
-        <button class="chip" id="logClear" data-i18n="logClear">すべて削除</button>
-      </div>
-    </div>
-  </section>
-
-  <section id="trendSec">
-    <h2 data-i18n="hTrend">1日の推移</h2>
-    <div class="card">
-      <div class="trend-nav">
-        <button class="chip" id="trPrev" data-i18n-aria="prevDay" aria-label="前の日">‹</button>
-        <b id="trDate"></b>
-        <button class="chip" id="trNext" data-i18n-aria="nextDay" aria-label="次の日">›</button>
-      </div>
-      <div class="trend" id="trend">
-        <svg id="trSvg" role="img" aria-label=""></svg>
-        <div class="tipbox" id="trTip" hidden></div>
-      </div>
-      <p class="trend-cap" data-i18n="trendCap">緑の帯は時間帯ごとのおすすめの明るさです。点をタップすると詳細を表示します。</p>
-    </div>
-  </section>
-
   <section id="placesSec">
     <h2 data-i18n="hPlaces">照度の早見表</h2>
     <div class="paper">
@@ -594,7 +515,7 @@
     <summary data-i18n="tipsSum">上手に測るコツ</summary>
     <ol data-i18n="tipsBody">
       <li><b>机や床の明るさ</b>：前カメラを上に向けて測りたい面に置きます。レンズに白いコピー用紙やティッシュを1枚かぶせると、より照度計らしい値になります。</li>
-      <li><b>部屋の雰囲気</b>：SENSOR で後カメラに切り替え、部屋の中央に向けてかざします（壁や床の色で値が変わります）。</li>
+      <li><b>部屋の雰囲気</b>：CAMERA キーで後カメラに切り替え、部屋の中央に向けてかざします（壁や床の色で値が変わります）。</li>
       <li>値がゆらぐときは <b>AVG</b> で5秒間の平均をとると安定します。</li>
       <li>色温度（K）は、カメラのホワイトバランスを固定できる端末（主に Android の Chrome）でだけ表示されます。</li>
       <li>測定中は画面が自動で消えないようになっています。</li>
@@ -604,7 +525,7 @@
   <details>
     <summary data-i18n="installSum">ホーム画面に追加（アプリとして使う）</summary>
     <ul data-i18n="installBody">
-      <li><b>Android（Chrome）</b>：上の「インストール」ボタン、またはメニュー →「アプリをインストール」。アイコンの長押しで「すぐ測定」「測定記録」に直接飛べます。</li>
+      <li><b>Android（Chrome）</b>：上の「インストール」ボタン、またはメニュー →「アプリをインストール」。アイコンを長押しして「すぐ測定」を選ぶと、開いてすぐ測定が始まります。</li>
       <li><b>iPhone（Safari）</b>：共有ボタン →「ホーム画面に追加」。</li>
       <li>一度開けば、オフラインでも起動できます。</li>
     </ul>
@@ -667,44 +588,40 @@
 
   // ---- 目安データ ----
   const PLACES = [
-    { lo: 0.1, hi: 0.3, ja: "満月の夜", en: "Full-moon night" },
-    { lo: 0.3, hi: 30, ja: "街灯の下・夜道", en: "Street at night" },
-    { lo: 30, hi: 75, ja: "寝室（就寝前の間接照明）", en: "Bedroom (before sleep)" },
-    { lo: 75, hi: 300, ja: "リビング（くつろぎ）", en: "Living room (relaxing)" },
-    { lo: 300, hi: 500, ja: "キッチン・洗面所", en: "Kitchen / washroom" },
-    { lo: 500, hi: 1000, ja: "オフィス・勉強机", en: "Office / study desk" },
-    { lo: 1000, hi: 3000, ja: "窓際・明るい店内", en: "By a window / bright shop" },
-    { lo: 3000, hi: 30000, ja: "曇りの日の屋外", en: "Outdoors, overcast" },
-    { lo: 30000, hi: 60000, ja: "晴れた日の日陰", en: "Shade on a sunny day" },
-    { lo: 60000, hi: Infinity, ja: "晴天の直射日光", en: "Direct sunlight" },
+    { lo: 0.1, hi: 0.3, ic: "🌕", ja: "満月の夜", en: "Full-moon night" },
+    { lo: 0.3, hi: 30, ic: "🌃", ja: "街灯の下・夜道", en: "Street at night" },
+    { lo: 30, hi: 75, ic: "🛏️", ja: "寝室（就寝前の間接照明）", en: "Bedroom (before sleep)" },
+    { lo: 75, hi: 300, ic: "🛋️", ja: "リビング（くつろぎ）", en: "Living room (relaxing)" },
+    { lo: 300, hi: 500, ic: "🍳", ja: "キッチン・洗面所", en: "Kitchen / washroom" },
+    { lo: 500, hi: 1000, ic: "💻", ja: "オフィス・勉強机", en: "Office / study desk" },
+    { lo: 1000, hi: 3000, ic: "🏪", ja: "窓際・明るい店内", en: "By a window / bright shop" },
+    { lo: 3000, hi: 30000, ic: "☁️", ja: "曇りの日の屋外", en: "Outdoors, overcast" },
+    { lo: 30000, hi: 60000, ic: "🌳", ja: "晴れた日の日陰", en: "Shade on a sunny day" },
+    { lo: 60000, hi: Infinity, ic: "☀️", ja: "晴天の直射日光", en: "Direct sunlight" },
   ];
 
   const SCENES = [
-    { id: "sleep", lo: 0, hi: 50, warm: true,
+    { id: "sleep", ic: "🌙", lo: 0, hi: 50, warm: true,
       ja: ["寝る前", "就寝1〜2時間前は 50 lx 以下、できれば暖色の間接照明で 30 lx 前後に。明るい光はメラトニンの分泌を抑えて寝つきを悪くします。"],
       en: ["Before bed", "For the 1–2 hours before bed keep it under 50 lx — ideally around 30 lx of warm, indirect light. Bright light suppresses melatonin and makes it harder to fall asleep."] },
-    { id: "night", lo: 0, hi: 10, warm: true,
+    { id: "night", ic: "🚻", lo: 0, hi: 10, warm: true,
       ja: ["夜中・トイレ", "夜中に起きたときは 10 lx 以下の足元灯程度に。明るい照明を浴びると目が覚めてしまいます。"],
       en: ["Middle of the night", "If you wake up at night, keep it under 10 lx, like a footlight. Bright light will wake you up."] },
-    { id: "morning", lo: 1000, hi: Infinity, cool: true,
+    { id: "morning", ic: "🌅", lo: 1000, hi: Infinity, cool: true,
       ja: ["朝・起床後", "起床後は 1,000 lx 以上（できれば屋外光 2,500 lx 以上）を浴びると体内時計がリセットされます。カーテンを開けて窓際へ。"],
       en: ["Morning", "After waking, get 1,000 lx or more (ideally 2,500 lx+ of outdoor light) to reset your body clock. Open the curtains and go near a window."] },
-    { id: "work", lo: 500, hi: 1500, cool: true,
+    { id: "work", ic: "📝", lo: 500, hi: 1500, cool: true,
       ja: ["昼間の作業・勉強", "デスクワークや勉強は手元 500〜1,000 lx が目安。暗いと目が疲れ、集中力が落ちます。"],
       en: ["Daytime work / study", "For desk work or study, aim for 500–1,000 lx on the desk. Too dark tires your eyes and hurts focus."] },
-    { id: "read", lo: 300, hi: 1000,
+    { id: "read", ic: "📖", lo: 300, hi: 1000,
       ja: ["読書", "読書は手元 300〜750 lx 程度。夜に読むならスタンドで手元だけ照らすと眠気を妨げにくいです。"],
       en: ["Reading", "Reading needs about 300–750 lx on the page. At night, a desk lamp lighting only the page interferes less with sleep."] },
-    { id: "relax", lo: 75, hi: 300, warm: true,
+    { id: "relax", ic: "🍵", lo: 75, hi: 300, warm: true,
       ja: ["夕方・団らん", "夕食後のくつろぎは 75〜300 lx 程度。夜が近づくにつれて少しずつ暗く・暖色にしていくのがおすすめです。"],
       en: ["Evening / relaxing", "After dinner, about 75–300 lx. Gradually dimming and warming the light toward bedtime is recommended."] },
   ];
 
-  // 時間帯ごとのおすすめ範囲（グラフの帯）[開始時, 終了時, 下限lx, 上限lx]
-  const BANDS = [[0, 2, 0, 50], [2, 5, 0, 10], [5, 9, 1000, Infinity], [9, 17, 500, 1500], [17, 21, 75, 300], [21, 24, 0, 50]];
-
   const LX_PER_FC = 10.764;
-  const LOG_MAX = 1000;
 
   // ---- 文言（日本語の静的テキストは HTML から取り込む） ----
   const T = {
@@ -720,24 +637,26 @@
       stSwitchErr: (e) => `<span class="err">カメラ切替に失敗しました（${e}）</span>`,
       camFront: "前", camRear: "後",
       srcFront: "前カメラ", srcRear: "後カメラ", srcAls: "照度センサー",
-      tCleared: "MAX / MIN を消去しました",
-      tRecNeed: "測定中に REC を押してください",
-      tRecorded: (v, room) => room ? `${room}：${v} を記録しました` : `${v} を記録しました`,
-      tUnitLx: "単位：ルクス（lx）", tUnitFc: "単位：フートカンデラ（fc）",
-      tSensorOnly: "照度センサーで測定中です", tWait: "起動中です。少しお待ちください",
-      tToFront: "前カメラに切り替え", tToRear: "後カメラに切り替え",
+      tCleared: "MAX / MIN を消去しました。ここから測り直します",
+      tHoldOn: (v) => `HOLD：${v} で表示を固定しました（もう一度押すと解除）`, tHoldOff: "HOLD 解除：測定中の値に戻りました",
+      tShowMax: (v) => `MAX：電源を入れてからの最大値 ${v} を表示中（長押しで消去）`,
+      tShowMin: (v) => `MIN：電源を入れてからの最小値 ${v} を表示中（長押しで消去）`,
+      tShowNow: "いまの値の表示に戻りました",
+      tLightOn: "液晶のバックライトを点けました", tLightOff: "液晶のバックライトを消しました",
+      camNow: (c) => `いま ${c}`,
+      tUnitLx: "単位をルクス（lx）にしました", tUnitFc: "単位をフートカンデラ（fc）にしました。1 fc ≒ 10.76 lx",
+      tSensorOnly: "端末の照度センサーで測定中のため、カメラは使っていません", tWait: "起動中です。少しお待ちください",
+      tToFront: "前カメラ（画面側）に切り替え：机や床に上向きに置いて測るときに", tToRear: "後カメラ（背面）に切り替え：部屋の中央や照明に向けてかざして測るときに",
       tCopied: "クリップボードにコピーしました", tShareFail: "共有できませんでした",
       tCalibNeedLux: "正しい照度を入力してください", tCalibNeedRun: "測定中に補正してください",
       tCalibDone: (c) => `補正しました（係数 ${c}）`,
       tInstalled: "インストールしました",
       tNoValue: "まだ測定値がありません", tNeedPower: "先に POWER を押してください",
-      tAvgStart: "5秒間の平均をとります…", tAvgDone: (v) => `平均 ${v}`, tAvgCancel: "平均をやめました",
+      tAvgStart: "5秒間の平均をとります。スマホを動かさずに（もう一度押すと中止）", tAvgDone: (v) => `5秒間の平均 ${v} で固定しました（AVG か HOLD で解除）`, tAvgCancel: "平均をやめました", tAvgRelease: "平均の固定を解除し、測定中の値に戻りました",
       tCodeBad: "補正コードを読み取れませんでした",
       tCodeOk: "補正コードを読み込みました",
       tCodeOther: (m) => `別の機種（${m}）の補正コードを読み込みました`,
-      tCsvSaved: "CSV を保存しました", tNoRecords: "記録がありません",
-      confirmClear: "測定記録をすべて削除しますか？",
-      vWait: "測定待ち", vDark: "暗すぎ", vBright: "明るすぎ", vOk: "ちょうどいい",
+      vWait: "測定待ち", vDark: "🌑 暗すぎ", vBright: "🔆 明るすぎ", vOk: "✅ ちょうどいい",
       rangeAbove: (a) => `${a} lx 以上`, rangeBelow: (b) => `${b} lx 以下`, rangeBetween: (a, b) => `${a}〜${b} lx`,
       rangeLabel: "目安",
       advDim: (p, b) => `💡 いまより<b>約${p}%暗く</b>すると目安（${b} lx）に入ります。調光できない照明なら、1灯消すかスタンドなど小さな照明に切り替えてみてください。`,
@@ -753,32 +672,21 @@
       shareNow: (v, p) => `いまの明るさは約 ${v}（${p}くらい）でした。※スマホカメラによる参考値`,
       shareApp: "スマホのカメラで明るさ（ルクス）を測れるWeb照度計",
       shareTitle: "デジタル照度計 LX-26",
-      logShareHead: "照度の測定記録（参考値）",
-      logMore: (n) => `ほか ${n} 件（CSV ですべて書き出せます）`,
       calibModel: (m, s) => `機種：${m} ／ ${s}`,
-      trNoData: "この日の記録はありません",
-      trAria: (n, lo, hi) => n ? `この日の記録 ${n} 件。最小 ${lo}、最大 ${hi}` : "この日の記録はありません",
-      locale: "ja-JP",
-      rooms: ["リビング", "寝室", "書斎・勉強部屋", "キッチン", "洗面所", "玄関", "屋外"],
     },
     en: {
       langBtn: "日本語", langAria: "日本語に切り替え",
       docTitle: "Digital Lux Meter LX-26 | Measure illuminance (lux) with your phone camera",
       docDesc: "A free web lux meter that estimates illuminance (lux) and color temperature with your phone camera. Shows typical levels for living rooms, bedrooms and outdoors, and checks whether the light suits bedtime, morning or work. No install, works offline.",
       appName: "Lux Meter", installTxt: "Install", themeAria: "Toggle light / dark", shareAria: "Share",
-      kHoldSub: "freeze", kMaxSub: "hold: clear", kAvgSub: "5 s mean", kLightSub: "backlight", kCamSub: "front/rear", kRecSub: "save reading",
+      kHoldSub: "freeze", kMaxSub: "hold: clear", kAvgSub: "5 s mean", kLightSub: "backlight",
       disclaimer: "⚠ Readings are estimates from your phone camera and are <b>for reference only</b>.",
       hGuide: "Recommended light right now", nowLabel: "Current level",
-      hLog: "Records", roomLabel: "Location", roomPh: "e.g. Living room",
-      logEmpty: "Press REC to save the current reading with time and location — handy for comparing rooms.",
-      logShare: "Share", logCsv: "Export CSV", logClear: "Delete all",
-      hTrend: "Daily trend", prevDay: "Previous day", nextDay: "Next day",
-      trendCap: "Green bands show the recommended level for each time of day. Tap a point for details.",
       hPlaces: "Illuminance guide", placesTitle: "TYPICAL LEVELS",
       tipsSum: "Tips for measuring",
-      tipsBody: "<li><b>Desk or floor</b>: place the phone face-up on the surface using the front camera. Covering the lens with a sheet of white paper or tissue gives more meter-like values.</li><li><b>Room ambience</b>: switch to the rear camera with SENSOR and point it at the middle of the room (wall and floor colors affect the value).</li><li>If the value fluctuates, press <b>AVG</b> to take a 5-second average.</li><li>Color temperature (K) is shown only on devices that can lock the camera white balance (mainly Chrome on Android).</li><li>The screen stays on while measuring.</li>",
+      tipsBody: "<li><b>Desk or floor</b>: place the phone face-up on the surface using the front camera. Covering the lens with a sheet of white paper or tissue gives more meter-like values.</li><li><b>Room ambience</b>: switch to the rear camera with the CAMERA key and point it at the middle of the room (wall and floor colors affect the value).</li><li>If the value fluctuates, press <b>AVG</b> to take a 5-second average.</li><li>Color temperature (K) is shown only on devices that can lock the camera white balance (mainly Chrome on Android).</li><li>The screen stays on while measuring.</li>",
       installSum: "Add to home screen (use as an app)",
-      installBody: "<li><b>Android (Chrome)</b>: tap “Install” above, or menu → “Install app”. Long-press the icon to jump straight to “Measure” or “Records”.</li><li><b>iPhone (Safari)</b>: Share → “Add to Home Screen”.</li><li>Once opened, it also starts offline.</li>",
+      installBody: "<li><b>Android (Chrome)</b>: tap “Install” above, or menu → “Install app”. Long-press the icon and choose “Measure” to start measuring right away.</li><li><b>iPhone (Safari)</b>: Share → “Add to Home Screen”.</li><li>Once opened, it also starts offline.</li>",
       calibSum: "Calibration",
       calibIntro: "Lenses and sensors differ between phone models. Calibrating once against a real lux meter, or a place with known brightness, improves accuracy. The factor is saved per model and per sensor (front / rear camera, light sensor).",
       knownPh: "True value", knownSuffix: "lx (true value)", calibBtn: "Calibrate", calibCoef: "Factor", calibReset: "Reset",
@@ -797,24 +705,26 @@
       stSwitchErr: (e) => `<span class="err">Failed to switch camera (${e})</span>`,
       camFront: "front", camRear: "rear",
       srcFront: "front camera", srcRear: "rear camera", srcAls: "light sensor",
-      tCleared: "MAX / MIN cleared",
-      tRecNeed: "Press REC while measuring",
-      tRecorded: (v, room) => room ? `Saved ${v} (${room})` : `Saved ${v}`,
-      tUnitLx: "Unit: lux (lx)", tUnitFc: "Unit: foot-candle (fc)",
-      tSensorOnly: "Measuring with the light sensor", tWait: "Starting up, please wait",
-      tToFront: "Front camera", tToRear: "Rear camera",
+      tCleared: "MAX / MIN cleared. Tracking starts over",
+      tHoldOn: (v) => `HOLD: display frozen at ${v} (press again to release)`, tHoldOff: "HOLD off: showing live readings",
+      tShowMax: (v) => `MAX: highest since power-on, ${v} (long-press to clear)`,
+      tShowMin: (v) => `MIN: lowest since power-on, ${v} (long-press to clear)`,
+      tShowNow: "Back to the live reading",
+      tLightOn: "LCD backlight on", tLightOff: "LCD backlight off",
+      camNow: (c) => `now: ${c}`,
+      tUnitLx: "Unit set to lux (lx)", tUnitFc: "Unit set to foot-candles (fc). 1 fc ≈ 10.76 lx",
+      tSensorOnly: "Measuring with the device light sensor, so the camera is not in use", tWait: "Starting up, please wait",
+      tToFront: "Front camera (screen side): place the phone face-up on a desk or floor", tToRear: "Rear camera: point it at the middle of the room or at a light",
       tCopied: "Copied to clipboard", tShareFail: "Could not share",
       tCalibNeedLux: "Enter the true illuminance", tCalibNeedRun: "Calibrate while measuring",
       tCalibDone: (c) => `Calibrated (factor ${c})`,
       tInstalled: "Installed",
       tNoValue: "No reading yet", tNeedPower: "Press POWER first",
-      tAvgStart: "Averaging for 5 seconds…", tAvgDone: (v) => `Average ${v}`, tAvgCancel: "Averaging cancelled",
+      tAvgStart: "Averaging for 5 seconds. Keep the phone still (press again to cancel)", tAvgDone: (v) => `Frozen at the 5-second average, ${v} (AVG or HOLD to release)`, tAvgCancel: "Averaging cancelled", tAvgRelease: "Average released, showing live readings",
       tCodeBad: "Couldn't read the calibration code",
       tCodeOk: "Calibration code loaded",
       tCodeOther: (m) => `Loaded a code from another model (${m})`,
-      tCsvSaved: "CSV saved", tNoRecords: "No records",
-      confirmClear: "Delete all records?",
-      vWait: "Waiting", vDark: "Too dark", vBright: "Too bright", vOk: "Just right",
+      vWait: "Waiting", vDark: "🌑 Too dark", vBright: "🔆 Too bright", vOk: "✅ Just right",
       rangeAbove: (a) => `${a} lx or more`, rangeBelow: (b) => `${b} lx or less`, rangeBetween: (a, b) => `${a}–${b} lx`,
       rangeLabel: "Target",
       advDim: (p, b) => `💡 Dim it by <b>about ${p}%</b> to reach the target (${b} lx). If your light can't be dimmed, turn one off or switch to a smaller lamp.`,
@@ -830,13 +740,7 @@
       shareNow: (v, p) => `It's about ${v} here (like: ${p}). *Reference value from a phone camera`,
       shareApp: "A web lux meter that measures brightness with your phone camera",
       shareTitle: "Digital Lux Meter LX-26",
-      logShareHead: "Illuminance records (reference values)",
-      logMore: (n) => `${n} more (export all as CSV)`,
       calibModel: (m, s) => `Model: ${m} / ${s}`,
-      trNoData: "No records on this day",
-      trAria: (n, lo, hi) => n ? `${n} records on this day. Min ${lo}, max ${hi}` : "No records on this day",
-      locale: "en-US",
-      rooms: ["Living room", "Bedroom", "Study", "Kitchen", "Washroom", "Entrance", "Outdoors"],
     },
   };
 
@@ -977,9 +881,6 @@
   }
   const fmtU = (lux) => `${fmt(conv(lux))} ${unit}`;
   const placeOf = (v) => PLACES.find((x) => v >= x.lo && v < x.hi) || PLACES[0];
-  const pad2 = (n) => String(n).padStart(2, "0");
-  const hhmm = (d) => `${pad2(d.getHours())}:${pad2(d.getMinutes())}`;
-  const dayKey = (ms) => { const d = new Date(ms); return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`; };
 
   function shownValue() {
     if (hold) return heldVal;
@@ -1010,7 +911,7 @@
   function updateInfo(v) {
     const hasV = v !== null && isFinite(v);
     const p = hasV ? placeOf(v) : null;
-    $("placeNow").textContent = p ? `≒ ${pname(p)}` : "—";
+    $("placeNow").textContent = p ? `≒ ${p.ic} ${pname(p)}` : "—";
     [...$("places").children].forEach((li, i) => li.classList.toggle("hit", PLACES[i] === p));
     renderJudge(hasV ? v : null);
     updateMini(hasV ? v : null);
@@ -1060,7 +961,7 @@
       cctHtml = `<p class="cct">${t("cctLine", n(kr), cctName(k))}${adv ? "<br>" + adv : ""}</p>`;
     }
     $("judge").innerHTML =
-      `<div class="verdict" style="color:${color}">${sname(s)}：${verdict}</div>` +
+      `<div class="verdict" style="color:${color}">${s.ic} ${sname(s)}：${verdict}</div>` +
       `<div class="range">${t("rangeLabel")} ${range}</div>${advHtml}<p class="tip">${s[lang][1]}</p>${cctHtml}`;
   }
 
@@ -1071,7 +972,8 @@
     const el = $("toast");
     el.textContent = msg; el.classList.add("show");
     clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => el.classList.remove("show"), 2200);
+    // 長い説明ほど長く表示する
+    toastTimer = setTimeout(() => el.classList.remove("show"), Math.min(5000, 1800 + msg.length * 45));
   }
   function buzz(ms = 8) { try { navigator.vibrate && navigator.vibrate(ms); } catch {} }
 
@@ -1219,7 +1121,7 @@
       if (performance.now() >= avg.end) finishAvg();
     }
     updateDisplay();
-    if (mode === "manual") setStatus(t("stManual", facing === "user" ? t("camFront") : t("camRear"), expInfo));
+    if (mode === "manual") setStatus(t("stManual", camName(), expInfo));
   }
 
   function finishAvg() {
@@ -1252,6 +1154,7 @@
       if (my !== sess) { s.stop(); return false; }
       sensor = s;
       mode = "sensor"; cctOk = false;
+      syncCam();
       loadCalib();
       sensor.onreading = () => push(sensor.illuminance * calib);
       setStatus(t("stSensor"));
@@ -1322,7 +1225,7 @@
     mode = "starting";
     $("pled").classList.add("on");
     $("kPowerSub").textContent = t("powerStop");
-    hold = false; heldVal = null; heldCct = null; avgHeld = false; avg = null; dispMode = "now";
+    releaseHold(); avg = null; dispMode = "now";
     resetMinMax(false);
     syncKeys();
     // 起動時の全点灯セルフテスト
@@ -1372,147 +1275,7 @@
     $("kMax").classList.toggle("lit", dispMode !== "now");
     $("kAvg").classList.toggle("lit", !!avg || avgHeld);
     $("kLight").classList.toggle("lit", lcd.classList.contains("backlit"));
-  }
-
-  // ---- 記録 ----
-  let log = [];
-  try { log = JSON.parse(store.get("luxLog", "[]")) || []; } catch { log = []; }
-  if (!Array.isArray(log)) log = [];
-  log = log.filter((r) => r && isFinite(r.t) && isFinite(r.lux)).slice(0, LOG_MAX);
-  function saveLog() {
-    log = log.slice(0, LOG_MAX);
-    store.set("luxLog", JSON.stringify(log));
-  }
-  const LOG_SHOW = 30;
-  function renderLog() {
-    const d0 = (r) => { const d = new Date(r.t); return `${d.getMonth() + 1}/${d.getDate()} ${hhmm(d)}`; };
-    $("logList").innerHTML = log.slice(0, LOG_SHOW).map((r) => {
-      const label = r.room || pname(placeOf(r.lux));
-      const k = r.cct ? `<small>${Math.round(r.cct / 50) * 50}K</small>` : "";
-      return `<li><time>${d0(r)}</time><span class="p">${esc(label)}</span><span class="v">${fmtU(r.lux)}${k}</span></li>`;
-    }).join("");
-    $("logEmpty").hidden = log.length > 0;
-    $("logActions").hidden = log.length === 0;
-    $("logMore").hidden = log.length <= LOG_SHOW;
-    $("logMore").textContent = t("logMore", log.length - LOG_SHOW);
-    renderRooms();
-  }
-  function renderRooms() {
-    const used = log.map((r) => r.room).filter(Boolean);
-    const all = [...new Set([...used, ...t("rooms")])].slice(0, 30);
-    $("roomList").innerHTML = all.map((r) => `<option value="${esc(r)}"></option>`).join("");
-  }
-  function record() {
-    const v = shownValue();
-    if (!running() || v === null || !isFinite(v)) { toast(t("tRecNeed")); return; }
-    const room = $("room").value.trim().slice(0, 30);
-    const k = shownCct();
-    const r = { t: Date.now(), lux: Math.round(v * 100) / 100 };
-    if (room) r.room = room;
-    if (k) r.cct = Math.round(k);
-    r.src = mode === "sensor" ? "als" : mode === "auto" ? "rel" : facing === "user" ? "front" : "rear";
-    log.unshift(r);
-    saveLog(); renderLog();
-    trendDay = dayKey(r.t); renderTrend();
-    ann("aMem", true); setTimeout(() => ann("aMem", false), 800);
-    buzz([10, 40, 10]);
-    toast(t("tRecorded", fmtU(v), room));
-  }
-
-  // ---- CSV ----
-  function exportCsv() {
-    if (!log.length) { toast(t("tNoRecords")); return; }
-    const q = (s) => `"${String(s).replace(/"/g, '""')}"`;
-    const ts = (ms) => { const d = new Date(ms); return `${dayKey(ms)} ${hhmm(d)}:${pad2(d.getSeconds())}`; };
-    const rows = [...log].reverse().map((r) =>
-      [ts(r.t), r.lux, (r.lux / LX_PER_FC).toFixed(2), r.cct || "", q(r.room || ""), r.src || ""].join(","));
-    const csv = "﻿" + ["datetime", "lux", "fc", "cct_k", "room", "source"].join(",") + "\r\n" + rows.join("\r\n") + "\r\n";
-    const url = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" }));
-    const a = document.createElement("a");
-    a.href = url; a.download = `lux-log-${dayKey(Date.now()).replace(/-/g, "")}.csv`;
-    document.body.appendChild(a); a.click(); a.remove();
-    setTimeout(() => URL.revokeObjectURL(url), 2000);
-    toast(t("tCsvSaved"));
-  }
-
-  // ---- 1日の推移グラフ ----
-  let trendDay = null, trPts = [];
-  const tickLabel = { "-1": "0.1", 0: "1", 1: "10", 2: "100", 3: "1k", 4: "10k", 5: "100k" };
-  function logDays() { return [...new Set(log.map((r) => dayKey(r.t)))].sort(); }
-  function renderTrend() {
-    const box = $("trend"), svg = $("trSvg");
-    const Wd = Math.max(240, Math.round(box.clientWidth || 300)), Ht = 190;
-    const ds = logDays();
-    if (!trendDay) trendDay = ds.length ? ds[ds.length - 1] : dayKey(Date.now());
-    const prev = ds.filter((d) => d < trendDay).pop();
-    const next = ds.find((d) => d > trendDay);
-    $("trPrev").disabled = !prev; $("trPrev").dataset.day = prev || "";
-    $("trNext").disabled = !next; $("trNext").dataset.day = next || "";
-    const [yy, mm, dd] = trendDay.split("-").map(Number);
-    const dayStart = new Date(yy, mm - 1, dd).getTime();
-    $("trDate").textContent = new Date(dayStart).toLocaleDateString(t("locale"), { month: "short", day: "numeric", weekday: "short" });
-
-    const recs = log.filter((r) => dayKey(r.t) === trendDay).sort((a, b) => a.t - b.t);
-    const vals = recs.map((r) => Math.max(r.lux, 0.1));
-    const lo = Math.max(-1, Math.min(0, Math.floor(Math.log10(Math.min(1, ...vals)))));
-    const hi = Math.min(5, Math.max(4, Math.ceil(Math.log10(Math.max(1, ...vals)))));
-    const P = { l: 34, r: 10, t: 10, b: 24 };
-    const X = (h) => P.l + (h / 24) * (Wd - P.l - P.r);
-    const Y = (v) => { const e = Math.min(hi, Math.max(lo, Math.log10(v))); return P.t + ((hi - e) / (hi - lo)) * (Ht - P.t - P.b); };
-    const f1 = (n) => n.toFixed(1);
-
-    let s = "";
-    for (const [h0, h1, a, b] of BANDS) {
-      s += `<rect class="band" x="${f1(X(h0))}" y="${f1(Y(b))}" width="${f1(X(h1) - X(h0))}" height="${f1(Math.max(0, Y(a) - Y(b)))}"/>`;
-    }
-    for (let e = lo; e <= hi; e++) {
-      const y = f1(Y(10 ** e));
-      s += `<line class="grid" x1="${P.l}" x2="${Wd - P.r}" y1="${y}" y2="${y}"/><text x="${P.l - 6}" y="${y}" dy="3.5" text-anchor="end">${tickLabel[e]}</text>`;
-    }
-    for (const h of [0, 6, 12, 18, 24]) {
-      const anchor = h === 0 ? "start" : h === 24 ? "end" : "middle";
-      s += `<text x="${f1(X(h))}" y="${Ht - 6}" text-anchor="${anchor}">${h}:00</text>`;
-    }
-    if (trendDay === dayKey(Date.now())) {
-      const now = new Date(), x = f1(X(now.getHours() + now.getMinutes() / 60));
-      s += `<line class="nowline" x1="${x}" x2="${x}" y1="${P.t}" y2="${Ht - P.b}"/>`;
-    }
-    trPts = recs.map((r) => ({ r, x: X((r.t - dayStart) / 3600000), y: Y(Math.max(r.lux, 0.1)) }));
-    if (trPts.length > 1) s += `<polyline class="line" points="${trPts.map((p) => `${f1(p.x)},${f1(p.y)}`).join(" ")}"/>`;
-    s += trPts.map((p) => `<circle class="dot" cx="${f1(p.x)}" cy="${f1(p.y)}" r="4.5"/>`).join("");
-    if (!trPts.length) s += `<text x="${(Wd + P.l) / 2}" y="${(Ht - P.b + P.t) / 2}" text-anchor="middle">${esc(t("trNoData"))}</text>`;
-    s += `<line class="cross" id="trX" y1="${P.t}" y2="${Ht - P.b}" visibility="hidden"/><circle class="hl" id="trH" r="7" visibility="hidden"/>`;
-
-    svg.setAttribute("viewBox", `0 0 ${Wd} ${Ht}`);
-    svg.innerHTML = s;
-    const lov = vals.length ? fmtU(Math.min(...recs.map((r) => r.lux))) : "", hiv = vals.length ? fmtU(Math.max(...recs.map((r) => r.lux))) : "";
-    svg.setAttribute("aria-label", t("trAria", recs.length, lov, hiv));
-    $("trTip").hidden = true;
-  }
-  function trPick(e) {
-    if (!trPts.length) return;
-    const svg = $("trSvg"), rect = svg.getBoundingClientRect();
-    const scale = rect.width / svg.viewBox.baseVal.width;
-    const x = (e.clientX - rect.left) / scale;
-    let best = trPts[0];
-    for (const p of trPts) if (Math.abs(p.x - x) < Math.abs(best.x - x)) best = p;
-    const cross = $("trX"), hl = $("trH");
-    cross.setAttribute("x1", best.x); cross.setAttribute("x2", best.x); cross.setAttribute("visibility", "visible");
-    hl.setAttribute("cx", best.x); hl.setAttribute("cy", best.y); hl.setAttribute("visibility", "visible");
-    const tip = $("trTip"), r = best.r;
-    const label = r.room || pname(placeOf(r.lux));
-    tip.innerHTML = `<b>${fmtU(r.lux)}</b>${r.cct ? ` <span>${Math.round(r.cct / 50) * 50}K</span>` : ""}<br><span>${hhmm(new Date(r.t))} · ${esc(label)}</span>`;
-    tip.hidden = false;
-    const left = Math.min(rect.width - 70, Math.max(70, best.x * scale));
-    tip.style.left = `${left}px`;
-    tip.style.top = `${best.y * scale}px`;
-    tip.classList.toggle("below", best.y * scale < 56);
-  }
-  function trHide() {
-    $("trTip").hidden = true;
-    const x = $("trX"), h = $("trH");
-    if (x) x.setAttribute("visibility", "hidden");
-    if (h) h.setAttribute("visibility", "hidden");
+    syncCam();
   }
 
   // ---- 共有 ----
@@ -1540,6 +1303,7 @@
     const lb = $("langBtn");
     lb.textContent = t("langBtn"); lb.setAttribute("aria-label", t("langAria")); lb.lang = lang === "en" ? "ja" : "en";
     $("kPowerSub").textContent = mode === "idle" ? t("powerStart") : t("powerStop");
+    syncCam();
     syncLd();
     renderStatic();
     if (mode === "idle") { setStatus(t("stIdle")); clearLcd(); } else updateDisplay();
@@ -1576,13 +1340,23 @@
   });
 
   $("kPower").onclick = () => (mode === "idle" ? powerOn() : powerOff());
+  // 測定中でないときに押されたキーは、理由をトーストで伝える
+  function needRun() {
+    if (running()) return true;
+    toast(mode === "starting" ? t("tWait") : t("tNeedPower"));
+    return false;
+  }
+  function releaseHold() { hold = false; avgHeld = false; heldVal = null; heldCct = null; }
   $("kHold").onclick = () => {
-    if (!running()) return;
-    if (hold) { hold = false; avgHeld = false; heldVal = null; heldCct = null; }
-    else {
+    if (!needRun()) return;
+    if (hold) {
+      toast(avgHeld ? t("tAvgRelease") : t("tHoldOff"));
+      releaseHold();
+    } else {
       const v = shownValue();
       if (v === null || !isFinite(v)) { toast(t("tNoValue")); return; }
       avg = null; hold = true; heldVal = v; heldCct = shownCct();
+      toast(t("tHoldOn", fmtU(v)));
     }
     syncKeys(); updateDisplay();
   };
@@ -1590,20 +1364,23 @@
   let pressTimer = 0, longPressed = false;
   $("kMax").addEventListener("pointerdown", () => {
     longPressed = false;
+    if (!running()) return;
     pressTimer = setTimeout(() => { longPressed = true; buzz(30); resetMinMax(); }, 700);
   });
   ["pointerup", "pointerleave", "pointercancel"].forEach((ev) =>
     $("kMax").addEventListener(ev, () => clearTimeout(pressTimer)));
   $("kMax").onclick = () => {
-    if (longPressed || !running()) return;
-    if (hold) { hold = false; avgHeld = false; }
+    if (longPressed || !needRun()) return;
+    if (hold) releaseHold();
     dispMode = dispMode === "now" ? "max" : dispMode === "max" ? "min" : "now";
     syncKeys(); updateDisplay();
+    const v = shownValue(), vs = v !== null && isFinite(v) ? fmtU(v) : "-----";
+    toast(dispMode === "max" ? t("tShowMax", vs) : dispMode === "min" ? t("tShowMin", vs) : t("tShowNow"));
   };
   $("kAvg").onclick = () => {
-    if (!running()) { toast(t("tNeedPower")); return; }
+    if (!needRun()) return;
     if (avg) { avg = null; toast(t("tAvgCancel")); }
-    else if (avgHeld) { hold = false; avgHeld = false; heldVal = null; heldCct = null; }
+    else if (avgHeld) { releaseHold(); toast(t("tAvgRelease")); }
     else {
       avg = { end: performance.now() + 5000, sum: 0, n: 0 };
       hold = false; heldVal = null; dispMode = "now";
@@ -1614,14 +1391,22 @@
   $("kUnit").onclick = () => {
     unit = unit === "lx" ? "fc" : "lx";
     store.set("luxUnit", unit);
-    updateDisplay(); renderLog(); renderTrend();
+    updateDisplay();
     toast(unit === "lx" ? t("tUnitLx") : t("tUnitFc"));
   };
-  $("kLight").onclick = () => { lcd.classList.toggle("backlit"); syncKeys(); };
+  $("kLight").onclick = () => {
+    lcd.classList.toggle("backlit"); syncKeys();
+    toast(lcd.classList.contains("backlit") ? t("tLightOn") : t("tLightOff"));
+  };
+  const camName = () => (facing === "user" ? t("camFront") : t("camRear"));
+  function syncCam() {
+    $("kCamSub").textContent = mode === "sensor" ? t("srcAls") : t("camNow", camName());
+  }
   $("kCam").onclick = async () => {
     if (mode === "sensor") { toast(t("tSensorOnly")); return; }
     if (mode === "starting" || camBusy) { toast(t("tWait")); return; }
     facing = facing === "user" ? "environment" : "user";
+    syncCam();
     toast(facing === "user" ? t("tToFront") : t("tToRear"));
     if (mode === "idle") { loadCalib(); return; }
     camBusy = true;
@@ -1634,40 +1419,11 @@
       camBusy = false;
     }
   };
-  $("kRec").onclick = record;
 
   $("shareBtn").onclick = () => {
     const v = shownValue();
     share(running() && v !== null && isFinite(v) ? t("shareNow", fmtU(v), pname(placeOf(v))) : t("shareApp"));
   };
-  $("logShare").onclick = () => {
-    const lines = log.slice(0, 20).map((r) => {
-      const d = new Date(r.t);
-      return `${d.getMonth() + 1}/${d.getDate()} ${hhmm(d)}  ${fmtU(r.lux)}（${r.room || pname(placeOf(r.lux))}）`;
-    });
-    share(`${t("logShareHead")}\n${lines.join("\n")}`);
-  };
-  $("logCsv").onclick = exportCsv;
-  $("logClear").onclick = () => {
-    if (!confirm(t("confirmClear"))) return;
-    log = []; saveLog(); renderLog(); trendDay = null; renderTrend();
-  };
-  $("room").addEventListener("change", () => store.set("luxRoom", $("room").value.trim().slice(0, 30)));
-
-  $("trPrev").onclick = () => { if ($("trPrev").dataset.day) { trendDay = $("trPrev").dataset.day; renderTrend(); } };
-  $("trNext").onclick = () => { if ($("trNext").dataset.day) { trendDay = $("trNext").dataset.day; renderTrend(); } };
-  $("trSvg").addEventListener("pointerdown", trPick);
-  $("trSvg").addEventListener("pointermove", trPick);
-  $("trSvg").addEventListener("pointerleave", (e) => { if (e.pointerType === "mouse") trHide(); });
-  document.addEventListener("pointerdown", (e) => { if (!$("trend").contains(e.target)) trHide(); });
-  let trW = 0;
-  if ("ResizeObserver" in window) {
-    new ResizeObserver(() => {
-      const w = Math.round($("trend").clientWidth);
-      if (w && w !== trW) { trW = w; renderTrend(); }
-    }).observe($("trend"));
-  }
-
   // ---- 補正 ----
   $("calibBtn").onclick = () => {
     const known = parseFloat($("knownLux").value);
@@ -1754,12 +1510,10 @@
   const sc = $("scenes");
   function renderStatic() {
     $("places").innerHTML = PLACES.map((p) =>
-      `<li><span>${pname(p)}</span><span class="lx">${p.hi === Infinity ? fmt(p.lo) + "〜" : fmt(p.lo) + "〜" + fmt(p.hi)}</span></li>`
+      `<li><span><i class="ic">${p.ic}</i>${pname(p)}</span><span class="lx">${p.hi === Infinity ? fmt(p.lo) + "〜" : fmt(p.lo) + "〜" + fmt(p.hi)}</span></li>`
     ).join("");
-    sc.innerHTML = SCENES.map((s) => `<button class="chip" data-id="${s.id}">${sname(s)}</button>`).join("");
+    sc.innerHTML = SCENES.map((s) => `<button class="chip" data-id="${s.id}">${s.ic} ${sname(s)}</button>`).join("");
     markScene();
-    renderLog();
-    renderTrend();
   }
   const markScene = () => [...sc.children].forEach((b) => b.classList.toggle("active", b.dataset.id === scene));
   sc.onclick = (e) => {
@@ -1769,7 +1523,7 @@
     renderJudge(v !== null && isFinite(v) ? v : null);
   };
 
-  $("room").value = store.get("luxRoom", "");
+  try { localStorage.removeItem("luxLog"); localStorage.removeItem("luxRoom"); } catch {}
   applyLang();
   detectModel().then((m) => { model = String(m).replace(/[|:]/g, "/").slice(0, 40) || "generic"; loadCalib(); });
 

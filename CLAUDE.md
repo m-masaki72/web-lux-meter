@@ -15,8 +15,8 @@
   - 色温度：ホワイトバランスを手動 6500K 付近に固定できた端末だけ `cctOf()`（McCamy 近似）で推定
   - 文言は `T.ja` / `T.en`。日本語の静的文言は HTML の `data-i18n` 要素から起動時に取り込むので、HTML 側を正とする
   - テーマは `data-theme`（未指定ならシステム設定）。色は CSS 変数で、ライト用は2か所（`[data-theme=light]` とメディアクエリ）を揃えて直す
-  - 状態の保存は localStorage（補正係数 `luxCal:<機種>:<user|environment|als>`、単位 `luxUnit`、記録 `luxLog`（最大1000件）、場所 `luxRoom`、言語 `luxLang`、テーマ `luxTheme`）
-  - ショートカット：`?start=1` で自動測定開始、`#log` で記録へ
+  - 状態の保存は localStorage（補正係数 `luxCal:<機種>:<user|environment|als>`、単位 `luxUnit`、言語 `luxLang`、テーマ `luxTheme`）
+  - ショートカット：`?start=1` で自動測定開始
 - `sw.js` — Service Worker。**アセットや index.html を変えたら `CACHE` のバージョンを上げる**
 - `manifest.webmanifest` / `icons/` / `og.png` — PWA・SNS 用。アイコン PNG と og.png は `icons/icon.svg` などから puppeteer で書き出したもの
 
