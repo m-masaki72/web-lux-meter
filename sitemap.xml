@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://m-masaki72.github.io/web-lux-meter/</loc>
+    <loc>https://lux-meter.morilab-garage.com/</loc>
     <lastmod>2026-10-17</lastmod>
-    <xhtml:link rel="alternate" hreflang="ja" href="https://m-masaki72.github.io/web-lux-meter/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://m-masaki72.github.io/web-lux-meter/?lang=en"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://m-masaki72.github.io/web-lux-meter/"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://lux-meter.morilab-garage.com/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://lux-meter.morilab-garage.com/?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://lux-meter.morilab-garage.com/"/>
   </url>
   <url>
-    <loc>https://m-masaki72.github.io/web-lux-meter/?lang=en</loc>
+    <loc>https://lux-meter.morilab-garage.com/?lang=en</loc>
     <lastmod>2026-10-17</lastmod>
-    <xhtml:link rel="alternate" hreflang="ja" href="https://m-masaki72.github.io/web-lux-meter/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://m-masaki72.github.io/web-lux-meter/?lang=en"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://m-masaki72.github.io/web-lux-meter/"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://lux-meter.morilab-garage.com/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://lux-meter.morilab-garage.com/?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://lux-meter.morilab-garage.com/"/>
   </url>
 </urlset>

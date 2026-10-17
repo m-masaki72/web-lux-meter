@@ -2,7 +2,7 @@
 
 スマホカメラで照度を推定するハンディ照度計風 Web アプリ（PWA）。ビルド工程なしの静的サイトで、GitHub Pages（`main` 直下）にそのまま公開している。
 
-- 公開URL: https://m-masaki72.github.io/web-lux-meter/
+- 公開URL: https://lux-meter.morilab-garage.com/
 - リポジトリ: https://github.com/m-masaki72/web-lux-meter
 
 ## 構成

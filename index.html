@@ -5,10 +5,10 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>デジタル照度計 LX-26 | スマホカメラで照度（ルクス）を測る</title>
 <meta name="description" content="スマホのカメラで部屋や屋外の明るさ（照度・ルクス）と色温度を測れる無料のWeb照度計。リビング・寝室・屋外の目安や、寝る前・朝・作業中に適した明るさを判定します。インストール不要、オフラインでも使えます。">
-<link rel="canonical" href="https://m-masaki72.github.io/web-lux-meter/">
-<link rel="alternate" hreflang="ja" href="https://m-masaki72.github.io/web-lux-meter/">
-<link rel="alternate" hreflang="en" href="https://m-masaki72.github.io/web-lux-meter/?lang=en">
-<link rel="alternate" hreflang="x-default" href="https://m-masaki72.github.io/web-lux-meter/">
+<link rel="canonical" href="https://lux-meter.morilab-garage.com/">
+<link rel="alternate" hreflang="ja" href="https://lux-meter.morilab-garage.com/">
+<link rel="alternate" hreflang="en" href="https://lux-meter.morilab-garage.com/?lang=en">
+<link rel="alternate" hreflang="x-default" href="https://lux-meter.morilab-garage.com/">
 <meta name="theme-color" content="#15171a">
 <meta name="color-scheme" content="dark light">
 <meta name="mobile-web-app-capable" content="yes">
@@ -25,8 +25,8 @@
 <meta property="og:site_name" content="デジタル照度計 LX-26">
 <meta property="og:title" content="デジタル照度計 LX-26 | スマホカメラで照度を測る">
 <meta property="og:description" content="スマホのカメラで明るさ（ルクス）と色温度を測定。寝る前・朝・作業中にちょうどいい明るさかを判定するWeb照度計。">
-<meta property="og:url" content="https://m-masaki72.github.io/web-lux-meter/">
-<meta property="og:image" content="https://m-masaki72.github.io/web-lux-meter/og.png">
+<meta property="og:url" content="https://lux-meter.morilab-garage.com/">
+<meta property="og:image" content="https://lux-meter.morilab-garage.com/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:locale" content="ja_JP">
@@ -49,18 +49,18 @@
   "@graph": [
     {
       "@type": "WebApplication",
-      "@id": "https://m-masaki72.github.io/web-lux-meter/#app",
+      "@id": "https://lux-meter.morilab-garage.com/#app",
       "name": "デジタル照度計 LX-26",
       "alternateName": "Web Lux Meter",
-      "url": "https://m-masaki72.github.io/web-lux-meter/",
+      "url": "https://lux-meter.morilab-garage.com/",
       "description": "スマホのカメラで照度（ルクス）と色温度を推定するWeb照度計。場所や時間帯ごとの明るさの目安を表示します。",
       "applicationCategory": "UtilitiesApplication",
       "operatingSystem": "Android, iOS, Windows, macOS",
       "browserRequirements": "カメラ（getUserMedia）に対応したモダンブラウザ",
       "inLanguage": ["ja", "en"],
       "isAccessibleForFree": true,
-      "image": "https://m-masaki72.github.io/web-lux-meter/icons/icon-512.png",
-      "screenshot": "https://m-masaki72.github.io/web-lux-meter/og.png",
+      "image": "https://lux-meter.morilab-garage.com/icons/icon-512.png",
+      "screenshot": "https://lux-meter.morilab-garage.com/og.png",
       "offers": { "@type": "Offer", "price": "0", "priceCurrency": "JPY" },
       "featureList": [
         "カメラによる照度（lx / fc）と色温度（K）の推定",
@@ -72,7 +72,7 @@
     },
     {
       "@type": "FAQPage",
-      "@id": "https://m-masaki72.github.io/web-lux-meter/#faq",
+      "@id": "https://lux-meter.morilab-garage.com/#faq",
       "mainEntity": [
         {
           "@type": "Question",
@@ -1280,7 +1280,7 @@
 
   // ---- 共有 ----
   async function share(text, withUrl = true) {
-    const url = "https://m-masaki72.github.io/web-lux-meter/" + (lang === "en" ? "?lang=en" : "");
+    const url = "https://lux-meter.morilab-garage.com/" + (lang === "en" ? "?lang=en" : "");
     try {
       if (navigator.share) { await navigator.share(withUrl ? { title: t("shareTitle"), text, url } : { text }); return; }
       await navigator.clipboard.writeText(withUrl ? `${text}\n${url}` : text);
@@ -1298,7 +1298,7 @@
     document.querySelectorAll("[data-i18n-aria]").forEach((el) => { el.setAttribute("aria-label", t(el.dataset.i18nAria)); });
     document.title = t("docTitle");
     document.querySelector('meta[name="description"]').content = t("docDesc");
-    const base = "https://m-masaki72.github.io/web-lux-meter/";
+    const base = "https://lux-meter.morilab-garage.com/";
     document.querySelector('link[rel="canonical"]').href = lang === "en" ? base + "?lang=en" : base;
     const lb = $("langBtn");
     lb.textContent = t("langBtn"); lb.setAttribute("aria-label", t("langAria")); lb.lang = lang === "en" ? "ja" : "en";
