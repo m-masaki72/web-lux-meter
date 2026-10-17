@@ -1,6 +1,6 @@
 // オフライン対応用 Service Worker
 // アプリ本体を更新したら CACHE のバージョンを上げる
-const CACHE = "lux-meter-v2";
+const CACHE = "lux-meter-v3";
 const ASSETS = [
   "./",
   "index.html",
@@ -32,8 +32,10 @@ self.addEventListener("fetch", (e) => {
     e.respondWith(
       fetch(req)
         .then((res) => {
-          const copy = res.clone();
-          caches.open(CACHE).then((c) => c.put("index.html", copy));
+          if (res.ok) {
+            const copy = res.clone();
+            caches.open(CACHE).then((c) => c.put("index.html", copy));
+          }
           return res;
         })
         .catch(() => caches.match("index.html"))

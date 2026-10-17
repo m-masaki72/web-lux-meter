@@ -18,6 +18,10 @@
     { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
     { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
   ],
+  "shortcuts": [
+    { "name": "すぐ測定", "short_name": "測定", "description": "開いてすぐ照度の測定を始めます", "url": "./?start=1", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] },
+    { "name": "測定記録", "short_name": "記録", "description": "測定記録と1日の推移を見ます", "url": "./#log", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] }
+  ],
   "screenshots": [
     { "src": "og.png", "sizes": "1200x630", "type": "image/png", "form_factor": "wide", "label": "デジタル照度計 LX-26" }
   ]
