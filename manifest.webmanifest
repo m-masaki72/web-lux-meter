@@ -1,0 +1,9 @@
+{
+  "name": "デジタル照度計",
+  "short_name": "照度計",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#0e1114",
+  "theme_color": "#0e1114",
+  "lang": "ja"
+}

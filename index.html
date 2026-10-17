@@ -1,0 +1,587 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0e1114">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>デジタル照度計</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0e1114;
+    --body: #1b2026;
+    --body-edge: #2a313a;
+    --lcd: #b9c7a3;
+    --lcd-dark: #a5b48e;
+    --ink: #1d2617;
+    --ghost: rgba(29, 38, 23, .09);
+    --text: #e6e9ec;
+    --muted: #8d969f;
+    --accent: #f2b544;
+    --ok: #5cc98a;
+    --warn: #f2b544;
+    --bad: #ef6b5b;
+    --mono: "Share Tech Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+    color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--bg); color: var(--text); }
+  body {
+    font: 15px/1.5 system-ui, -apple-system, "Hiragino Sans", "Noto Sans JP", sans-serif;
+    padding: max(12px, env(safe-area-inset-top)) 16px max(24px, env(safe-area-inset-bottom));
+    -webkit-tap-highlight-color: transparent;
+  }
+  .wrap { max-width: 480px; margin: 0 auto; }
+
+  /* 本体 */
+  .device {
+    background: linear-gradient(180deg, #232931, var(--body));
+    border: 1px solid var(--body-edge);
+    border-radius: 22px;
+    padding: 14px 14px 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.05);
+  }
+  .brand { display: flex; justify-content: space-between; align-items: center; margin: 0 4px 10px; }
+  .brand b { letter-spacing: .14em; font-size: 12px; color: var(--muted); font-weight: 600; }
+  .led { width: 8px; height: 8px; border-radius: 50%; background: #3a3f45; display: inline-block; margin-right: 6px; vertical-align: middle; }
+  .led.on { background: #ff5a4a; box-shadow: 0 0 8px #ff5a4a; }
+  .brand small { color: var(--muted); font-size: 11px; }
+
+  /* 液晶 */
+  .lcd {
+    background: linear-gradient(180deg, var(--lcd), var(--lcd-dark));
+    color: var(--ink);
+    border-radius: 10px;
+    padding: 10px 14px 12px;
+    box-shadow: inset 0 2px 6px rgba(0,0,0,.35);
+    font-family: var(--mono);
+    position: relative;
+  }
+  .lcd-top { display: flex; justify-content: space-between; font-size: 12px; min-height: 18px; }
+  .lcd-top span { opacity: .25; }
+  .lcd-top span.on { opacity: 1; }
+  .readout { position: relative; text-align: right; line-height: 1; margin: 6px 0 2px; }
+  .readout .ghost, .readout .val { font-size: clamp(56px, 19vw, 84px); letter-spacing: .02em; }
+  .readout .digits { position: relative; display: inline-block; }
+  .readout .ghost { color: var(--ghost); position: absolute; right: 0; top: 0; white-space: pre; }
+  .readout .val { position: relative; }
+  .readout .unit { font-size: 22px; margin-left: 6px; }
+  .lcd-bottom { display: flex; justify-content: space-between; font-size: 13px; gap: 8px; }
+  .lcd-place { font-family: system-ui, sans-serif; font-weight: 700; font-size: 14px; margin-top: 6px; min-height: 21px; }
+
+  /* 対数バー */
+  .scale { margin: 14px 2px 0; }
+  .bar {
+    position: relative; height: 14px; border-radius: 7px;
+    background: linear-gradient(90deg, #11131a 0%, #2b2f55 16%, #6a4d8a 33%, #c27a3a 50%, #e9b44c 66%, #f5dd84 83%, #fffbe8 100%);
+  }
+  .marker {
+    position: absolute; top: -5px; width: 4px; height: 24px; margin-left: -2px;
+    background: #fff; border-radius: 2px; box-shadow: 0 0 0 1px #000, 0 0 8px rgba(255,255,255,.7);
+    transition: left .25s ease-out; left: 0;
+  }
+  .ticks { position: relative; height: 18px; font: 11px var(--mono); color: var(--muted); }
+  .ticks span { position: absolute; transform: translateX(-50%); top: 3px; }
+  .ticks span:first-child { transform: none; }
+  .ticks span:last-child { transform: translateX(-100%); }
+
+  /* ボタン */
+  .buttons { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 14px; }
+  button {
+    font: inherit; font-size: 13px; color: var(--text);
+    background: #2c333c; border: 1px solid #3a434e; border-radius: 12px;
+    padding: 11px 4px; cursor: pointer; box-shadow: 0 2px 0 #11151a;
+  }
+  button:active { transform: translateY(1px); box-shadow: none; }
+  button.primary { background: var(--accent); color: #241a05; border-color: #c9922f; font-weight: 700; }
+  button.active { background: #4a3d1c; border-color: var(--accent); color: var(--accent); }
+  .start { width: 100%; margin-top: 14px; padding: 14px; font-size: 16px; }
+
+  .preview-row { display: flex; gap: 10px; align-items: center; margin-top: 12px; }
+  video { width: 72px; height: 54px; object-fit: cover; border-radius: 8px; background: #000; border: 1px solid var(--body-edge); }
+  .status { font-size: 12px; color: var(--muted); line-height: 1.45; }
+  .status .err { color: var(--bad); }
+
+  /* セクション */
+  h2 { font-size: 15px; margin: 26px 4px 10px; letter-spacing: .04em; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chips button { padding: 8px 12px; border-radius: 999px; font-size: 13px; }
+  .judge {
+    margin-top: 10px; background: var(--body); border: 1px solid var(--body-edge);
+    border-radius: 14px; padding: 12px 14px;
+  }
+  .judge .verdict { font-weight: 800; font-size: 18px; }
+  .judge .range { color: var(--muted); font-size: 12px; }
+  .judge p { margin: 6px 0 0; font-size: 13px; }
+
+  .places { list-style: none; margin: 0; padding: 0; background: var(--body); border: 1px solid var(--body-edge); border-radius: 14px; overflow: hidden; }
+  .places li { display: flex; justify-content: space-between; gap: 10px; padding: 9px 14px; border-top: 1px solid var(--body-edge); font-size: 14px; }
+  .places li:first-child { border-top: 0; }
+  .places li .lx { font-family: var(--mono); color: var(--muted); white-space: nowrap; }
+  .places li.hit { background: #3a3220; }
+  .places li.hit .lx { color: var(--accent); }
+
+  details { background: var(--body); border: 1px solid var(--body-edge); border-radius: 14px; padding: 10px 14px; margin-top: 10px; }
+  summary { cursor: pointer; font-weight: 600; font-size: 14px; }
+  details p, details li { font-size: 13px; color: #c3c9cf; }
+  details ol, details ul { padding-left: 20px; margin: 6px 0; }
+  .calib-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-top: 8px; }
+  .calib-row input {
+    width: 110px; font: 15px var(--mono); padding: 8px 10px; border-radius: 10px;
+    border: 1px solid #3a434e; background: #12161a; color: var(--text);
+  }
+  .calib-row button { padding: 8px 12px; }
+  .disclaimer { margin: 12px 0 0; font-size: 12px; color: var(--accent); text-align: center; }
+  .note { font-size: 11px; color: var(--muted); margin: 18px 4px 0; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="device">
+    <div class="brand">
+      <b><span class="led" id="led"></span>DIGITAL LUX METER</b>
+      <small id="srcLabel">STANDBY</small>
+    </div>
+
+    <div class="lcd">
+      <div class="lcd-top">
+        <span id="indHold">HOLD</span>
+        <span id="indOver">OVER</span>
+        <span id="indRel">REL</span>
+        <span id="indCam">CAM</span>
+      </div>
+      <div class="readout">
+        <span class="digits"><span class="ghost" id="ghost">88888</span><span class="val" id="val">-----</span></span><span class="unit">lx</span>
+      </div>
+      <div class="lcd-bottom">
+        <span>MIN <b id="min">---</b></span>
+        <span>MAX <b id="max">---</b></span>
+      </div>
+      <div class="lcd-place" id="placeNow">　</div>
+    </div>
+
+    <div class="scale" aria-hidden="true">
+      <div class="bar"><div class="marker" id="marker"></div></div>
+      <div class="ticks">
+        <span style="left:0%">0.1</span>
+        <span style="left:16.67%">1</span>
+        <span style="left:33.33%">10</span>
+        <span style="left:50%">100</span>
+        <span style="left:66.67%">1k</span>
+        <span style="left:83.33%">10k</span>
+        <span style="left:100%">100k</span>
+      </div>
+    </div>
+
+    <button class="primary start" id="startBtn">測定開始</button>
+
+    <div class="buttons" id="ctrl" hidden>
+      <button id="holdBtn">HOLD</button>
+      <button id="resetBtn">MIN/MAX<br>リセット</button>
+      <button id="flipBtn">カメラ<br>切替</button>
+      <button id="stopBtn">停止</button>
+    </div>
+
+    <div class="preview-row">
+      <video id="video" playsinline muted></video>
+      <div class="status" id="status">「測定開始」を押すとカメラを使って照度を推定します。</div>
+    </div>
+    <p class="disclaimer">⚠ 測定値はスマホカメラによる推定で、<b>あくまで参考値</b>です。</p>
+  </div>
+
+  <h2>いまの時間帯・用途の目安</h2>
+  <div class="chips" id="scenes"></div>
+  <div class="judge" id="judge"></div>
+
+  <h2>場所・環境の目安</h2>
+  <ul class="places" id="places"></ul>
+
+  <details>
+    <summary>上手に測るコツ</summary>
+    <ol>
+      <li><b>机や床の明るさ</b>：インカメラ（前面）を上に向けて、測りたい面に置きます。レンズに白いコピー用紙やティッシュを1枚かぶせると、より照度計らしい値になります。</li>
+      <li><b>部屋の雰囲気</b>：背面カメラを部屋の中央に向けてかざします（壁や床の色で値が変わります）。</li>
+      <li>値は数秒で安定します。光源を直接のぞき込むと過大に出ます。</li>
+    </ol>
+  </details>
+
+  <details id="calibBox">
+    <summary>補正（キャリブレーション）</summary>
+    <p>スマホの機種ごとにレンズ・センサー特性が違うため、正確な照度計や明るさが分かっている場所（例：晴天の屋外日向 ≒ 100,000 lx）で一度合わせると精度が上がります。</p>
+    <div class="calib-row">
+      <input id="knownLux" type="number" inputmode="decimal" min="0" placeholder="正しい値">
+      <span>lx に合わせる</span>
+      <button id="calibBtn">補正</button>
+    </div>
+    <div class="calib-row">
+      <span>補正係数</span>
+      <input id="calibInput" type="number" inputmode="decimal" step="0.01" min="0.01">
+      <button id="calibReset">初期化</button>
+    </div>
+  </details>
+
+  <p class="note">※表示される照度は<b>あくまで参考値</b>です。スマホカメラによる推定のため、専用の照度計ほど正確ではありません（目安として±30〜50%程度、端末によってはさらに大きくずれます）。目安の数値は JIS Z 9110 の照度基準や睡眠・概日リズムに関する一般的な推奨値をもとにした参考値です。</p>
+</div>
+
+<script>
+(() => {
+  "use strict";
+
+  // ---- 目安データ ----
+  const PLACES = [
+    { name: "満月の夜", lo: 0.1, hi: 0.3 },
+    { name: "街灯の下・夜道", lo: 0.3, hi: 30 },
+    { name: "寝室（就寝前の間接照明）", lo: 30, hi: 75 },
+    { name: "リビング（くつろぎ）", lo: 75, hi: 300 },
+    { name: "キッチン・洗面所", lo: 300, hi: 500 },
+    { name: "オフィス・勉強机", lo: 500, hi: 1000 },
+    { name: "窓際・明るい店内", lo: 1000, hi: 3000 },
+    { name: "曇りの日の屋外", lo: 3000, hi: 30000 },
+    { name: "晴れた日の日陰", lo: 30000, hi: 60000 },
+    { name: "晴天の直射日光", lo: 60000, hi: Infinity },
+  ];
+
+  const SCENES = [
+    { id: "sleep", name: "寝る前", lo: 0, hi: 50,
+      tip: "就寝1〜2時間前は 50 lx 以下、できれば暖色の間接照明で 30 lx 前後に。明るい光はメラトニンの分泌を抑えて寝つきを悪くします。" },
+    { id: "night", name: "夜中・トイレ", lo: 0, hi: 10,
+      tip: "夜中に起きたときは 10 lx 以下の足元灯程度に。明るい照明を浴びると目が覚めてしまいます。" },
+    { id: "morning", name: "朝・起床後", lo: 1000, hi: Infinity,
+      tip: "起床後は 1,000 lx 以上（できれば屋外光 2,500 lx 以上）を浴びると体内時計がリセットされます。カーテンを開けて窓際へ。" },
+    { id: "work", name: "昼間の作業・勉強", lo: 500, hi: 1500,
+      tip: "デスクワークや勉強は手元 500〜1,000 lx が目安。暗いと目が疲れ、集中力が落ちます。" },
+    { id: "read", name: "読書", lo: 300, hi: 1000,
+      tip: "読書は手元 300〜750 lx 程度。夜に読むならスタンドで手元だけ照らすと眠気を妨げにくいです。" },
+    { id: "relax", name: "夕方・団らん", lo: 75, hi: 300,
+      tip: "夕食後のくつろぎは 75〜300 lx 程度。夜が近づくにつれて少しずつ暗く・暖色にしていくのがおすすめです。" },
+  ];
+
+  // ---- DOM ----
+  const $ = (id) => document.getElementById(id);
+  const video = $("video");
+  const canvas = document.createElement("canvas");
+  canvas.width = 64; canvas.height = 48;
+  const ctx = canvas.getContext("2d", { willReadFrequently: true });
+
+  // ---- 状態 ----
+  let stream = null, track = null, sensor = null;
+  let facing = "user";
+  let mode = "idle";          // idle | sensor | manual | auto
+  let caps = {}, expT = 0, iso = null, settleUntil = 0;
+  let ema = null, hold = false, minV = Infinity, maxV = -Infinity;
+  let lastMeasure = 0, rafId = 0, over = false;
+  let scene = guessScene();
+  const F_NUMBER = 1.8;       // スマホカメラの一般的な絞り値（補正係数で吸収）
+
+  // sRGB → リニア変換テーブル
+  const LIN = new Float32Array(256);
+  for (let i = 0; i < 256; i++) {
+    const c = i / 255;
+    LIN[i] = c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+  }
+
+  // ---- 補正係数の保存 ----
+  const store = {
+    get(k, d) { try { const v = localStorage.getItem(k); return v === null ? d : v; } catch { return d; } },
+    set(k, v) { try { localStorage.setItem(k, v); } catch {} },
+  };
+  const calibKey = () => "luxCalib_" + facing;
+  let calib = 1;
+  function loadCalib() {
+    calib = parseFloat(store.get(calibKey(), "1")) || 1;
+    $("calibInput").value = calib.toFixed(3);
+  }
+
+  // ---- 表示 ----
+  function fmt(v) {
+    if (!isFinite(v)) return "-----";
+    if (v < 10) return v.toFixed(1);
+    if (v < 100000) return Math.round(v).toLocaleString("en-US");
+    return "99,999+";
+  }
+  const logPos = (v) => Math.min(100, Math.max(0, (Math.log10(Math.max(v, 0.1)) + 1) / 6 * 100));
+
+  function render(v) {
+    if (!hold) {
+      const txt = fmt(v);
+      $("val").textContent = txt;
+      $("ghost").textContent = txt.replace(/\d/g, "8").replace("+", " ");
+      $("marker").style.left = logPos(v) + "%";
+    }
+    const shown = hold ? parseFloat($("val").dataset.v || v) : v;
+    if (!hold) $("val").dataset.v = v;
+    minV = Math.min(minV, v); maxV = Math.max(maxV, v);
+    $("min").textContent = fmt(minV);
+    $("max").textContent = fmt(maxV);
+    $("indOver").classList.toggle("on", over);
+
+    const p = PLACES.find((x) => shown >= x.lo && shown < x.hi) || PLACES[0];
+    $("placeNow").textContent = "≒ " + p.name;
+    [...$("places").children].forEach((li, i) => li.classList.toggle("hit", PLACES[i] === p));
+    renderJudge(shown);
+  }
+
+  function renderJudge(v) {
+    const s = SCENES.find((x) => x.id === scene);
+    const range = s.hi === Infinity ? `${s.lo.toLocaleString()} lx 以上` :
+                  s.lo === 0 ? `${s.hi.toLocaleString()} lx 以下` :
+                  `${s.lo.toLocaleString()}〜${s.hi.toLocaleString()} lx`;
+    let verdict = "測定待ち", color = "var(--muted)";
+    if (v !== null && isFinite(v)) {
+      if (v < s.lo) { verdict = "暗すぎ"; color = "var(--warn)"; }
+      else if (v > s.hi) { verdict = "明るすぎ"; color = "var(--bad)"; }
+      else { verdict = "ちょうどいい"; color = "var(--ok)"; }
+    }
+    $("judge").innerHTML =
+      `<div class="verdict" style="color:${color}">${s.name}：${verdict}</div>` +
+      `<div class="range">目安 ${range}</div><p>${s.tip}</p>`;
+  }
+
+  function setStatus(html) { $("status").innerHTML = html; }
+  function setInd(id, on) { $(id).classList.toggle("on", on); }
+
+  function guessScene() {
+    const h = new Date().getHours();
+    if (h >= 5 && h < 9) return "morning";
+    if (h >= 9 && h < 17) return "work";
+    if (h >= 17 && h < 21) return "relax";
+    if (h >= 21 || h < 2) return "sleep";
+    return "night";
+  }
+
+  // ---- 測定 ----
+  function sample() {
+    const vw = video.videoWidth, vh = video.videoHeight;
+    if (!vw || !vh) return null;
+    // 中央50%を切り出して縮小
+    ctx.drawImage(video, vw * 0.25, vh * 0.25, vw * 0.5, vh * 0.5, 0, 0, canvas.width, canvas.height);
+    const d = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+    let sum = 0, sat = 0;
+    const n = d.length / 4;
+    for (let i = 0; i < d.length; i += 4) {
+      const r = d[i], g = d[i + 1], b = d[i + 2];
+      sum += 0.2126 * LIN[r] + 0.7152 * LIN[g] + 0.0722 * LIN[b];
+      if (r > 250 || g > 250 || b > 250) sat++;
+    }
+    return { y: sum / n, sat: sat / n };
+  }
+
+  async function applyExposure() {
+    const c = { exposureMode: "manual", exposureTime: expT };
+    if (iso !== null) c.iso = iso;
+    await track.applyConstraints({ advanced: [c] });
+    settleUntil = performance.now() + 400;
+  }
+
+  // 露出を自動で振って適正範囲に入れる。調整したら true
+  async function adjustExposure(y, sat) {
+    const tMin = caps.exposureTime.min, tMax = caps.exposureTime.max;
+    const tSoftMax = Math.min(tMax, 1000);  // 0.1秒までは露出時間で稼ぐ
+    const isoMin = caps.iso ? caps.iso.min : null, isoMax = caps.iso ? caps.iso.max : null;
+    let changed = false;
+
+    if (sat > 0.02 || y > 0.45) {
+      if (iso !== null && iso > Math.max(isoMin, 100) && expT <= tMin) {
+        iso = Math.max(isoMin, iso / 2); changed = true;
+      } else if (expT > tMin) {
+        expT = Math.max(tMin, expT / 3); changed = true;
+      } else if (iso !== null && iso > isoMin) {
+        iso = Math.max(isoMin, iso / 2); changed = true;
+      }
+      over = !changed;
+    } else if (y < 0.03) {
+      over = false;
+      if (expT < tSoftMax) { expT = Math.min(tSoftMax, expT * 3); changed = true; }
+      else if (iso !== null && iso < isoMax) { iso = Math.min(isoMax, iso * 2); changed = true; }
+      else if (expT < tMax) { expT = Math.min(tMax, expT * 2); changed = true; }
+    } else {
+      over = false;
+    }
+    if (changed) await applyExposure();
+    return changed;
+  }
+
+  async function measure() {
+    const s = sample();
+    if (!s) return;
+    let lux;
+    if (mode === "manual") {
+      if (performance.now() < settleUntil) return;
+      if (await adjustExposure(s.y, s.sat)) return;
+      const st = track.getSettings();
+      const tSec = (st.exposureTime || expT) * 1e-4;   // 仕様上 100µs 単位
+      const S = st.iso || iso || 100;
+      // 反射式露出計の関係式 E = 250·N²/(t·S) を平均輝度で補正
+      lux = 250 * F_NUMBER * F_NUMBER * (s.y / 0.18) / (tSec * S);
+      expInfo = `1/${Math.round(1 / tSec)}s ISO${Math.round(S)}`;
+    } else {
+      // 露出制御できない端末：自動露出下の画素値からの相対値
+      lux = s.y * 600;
+      over = s.sat > 0.3;
+    }
+    push(lux * calib);
+  }
+
+  let expInfo = "";
+  function push(v) {
+    ema = ema === null ? v : ema + (v - ema) * 0.35;
+    render(ema);
+    if (mode === "manual") setStatus(`カメラ露出制御で測定中（${expInfo}）`);
+  }
+
+  function loop(t) {
+    rafId = requestAnimationFrame(loop);
+    if (t - lastMeasure < 180) return;
+    lastMeasure = t;
+    measure().catch((e) => console.warn(e));
+  }
+
+  // ---- 開始・停止 ----
+  async function startSensor() {
+    if (!("AmbientLightSensor" in window)) return false;
+    try {
+      sensor = new AmbientLightSensor({ frequency: 5 });
+      await new Promise((ok, ng) => {
+        sensor.onreading = () => { ok(); };
+        sensor.onerror = (e) => ng(e.error);
+        sensor.start();
+        setTimeout(() => ng(new Error("timeout")), 1500);
+      });
+      sensor.onreading = () => push(sensor.illuminance);
+      mode = "sensor";
+      $("srcLabel").textContent = "LIGHT SENSOR";
+      setStatus("端末の照度センサーで測定中（高精度）");
+      return true;
+    } catch {
+      try { sensor && sensor.stop(); } catch {}
+      sensor = null;
+      return false;
+    }
+  }
+
+  async function startCamera() {
+    stopCamera();
+    stream = await navigator.mediaDevices.getUserMedia({
+      audio: false,
+      video: { facingMode: { ideal: facing }, width: { ideal: 640 }, height: { ideal: 480 } },
+    });
+    video.srcObject = stream;
+    await video.play();
+    track = stream.getVideoTracks()[0];
+    caps = track.getCapabilities ? track.getCapabilities() : {};
+    loadCalib();
+
+    if (caps.exposureMode && caps.exposureMode.includes("manual") && caps.exposureTime) {
+      try {
+        iso = caps.iso ? Math.min(caps.iso.max, Math.max(caps.iso.min, 100)) : null;
+        expT = Math.min(caps.exposureTime.max, Math.max(caps.exposureTime.min, 100));
+        await applyExposure();
+        mode = "manual";
+      } catch { mode = "auto"; }
+    } else {
+      mode = "auto";
+    }
+    setInd("indCam", true);
+    setInd("indRel", mode === "auto");
+    $("srcLabel").textContent = facing === "user" ? "FRONT CAM" : "REAR CAM";
+    if (mode === "auto") {
+      setStatus("この端末・ブラウザはカメラの露出制御に非対応のため、<b>相対値（参考程度）</b>の表示です。Android の Chrome だと精度が上がります。");
+    }
+    ema = null;
+    cancelAnimationFrame(rafId);
+    rafId = requestAnimationFrame(loop);
+  }
+
+  function stopCamera() {
+    cancelAnimationFrame(rafId);
+    if (stream) stream.getTracks().forEach((t) => t.stop());
+    stream = null; track = null;
+    setInd("indCam", false);
+  }
+
+  async function start() {
+    $("startBtn").hidden = true;
+    $("ctrl").hidden = false;
+    $("led").classList.add("on");
+    resetMinMax();
+    if (await startSensor()) return;
+    try {
+      await startCamera();
+    } catch (e) {
+      setStatus(`<span class="err">カメラを起動できませんでした（${e.name || e}）。カメラの許可と、HTTPSで開いているかを確認してください。</span>`);
+      stop();
+    }
+  }
+
+  function stop() {
+    stopCamera();
+    if (sensor) { try { sensor.stop(); } catch {} sensor = null; }
+    mode = "idle";
+    $("startBtn").hidden = false;
+    $("ctrl").hidden = true;
+    $("led").classList.remove("on");
+    $("srcLabel").textContent = "STANDBY";
+  }
+
+  function resetMinMax() {
+    minV = Infinity; maxV = -Infinity;
+    $("min").textContent = "---"; $("max").textContent = "---";
+  }
+
+  // ---- イベント ----
+  $("startBtn").onclick = start;
+  $("stopBtn").onclick = stop;
+  $("resetBtn").onclick = resetMinMax;
+  $("holdBtn").onclick = () => {
+    hold = !hold;
+    $("holdBtn").classList.toggle("active", hold);
+    setInd("indHold", hold);
+  };
+  $("flipBtn").onclick = async () => {
+    if (mode === "sensor") return;
+    facing = facing === "user" ? "environment" : "user";
+    try { await startCamera(); } catch (e) { setStatus(`<span class="err">カメラ切替に失敗：${e.name || e}</span>`); }
+  };
+  $("calibBtn").onclick = () => {
+    const known = parseFloat($("knownLux").value);
+    if (!(known > 0) || !(ema > 0)) return;
+    calib = calib * known / ema;
+    ema = known;
+    store.set(calibKey(), String(calib));
+    $("calibInput").value = calib.toFixed(3);
+  };
+  $("calibInput").onchange = () => {
+    const v = parseFloat($("calibInput").value);
+    if (v > 0) { calib = v; store.set(calibKey(), String(v)); }
+  };
+  $("calibReset").onclick = () => { calib = 1; store.set(calibKey(), "1"); $("calibInput").value = "1.000"; };
+
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden && mode !== "idle") stop();
+  });
+
+  // ---- 初期描画 ----
+  $("places").innerHTML = PLACES.map((p) =>
+    `<li><span>${p.name}</span><span class="lx">${p.hi === Infinity ? fmt(p.lo) + "〜" : fmt(p.lo) + "〜" + fmt(p.hi)}</span></li>`
+  ).join("");
+  const sc = $("scenes");
+  sc.innerHTML = SCENES.map((s) => `<button data-id="${s.id}">${s.name}</button>`).join("");
+  const markScene = () => [...sc.children].forEach((b) => b.classList.toggle("active", b.dataset.id === scene));
+  sc.onclick = (e) => {
+    const b = e.target.closest("button"); if (!b) return;
+    scene = b.dataset.id; markScene();
+    renderJudge(ema);
+  };
+  markScene();
+  renderJudge(null);
+  loadCalib();
+})();
+</script>
+</body>
+</html>
