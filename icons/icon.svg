@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f8cb48"/><stop offset="1" stop-color="#d99b0d"/>
+    </linearGradient>
+    <linearGradient id="face" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#3a3e44"/><stop offset="1" stop-color="#24272b"/>
+    </linearGradient>
+    <radialGradient id="dome" cx=".38" cy=".3" r=".75">
+      <stop offset="0" stop-color="#fff"/><stop offset=".45" stop-color="#eeeee8"/><stop offset="1" stop-color="#b4b4ab"/>
+    </radialGradient>
+    <linearGradient id="lcd" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#c4cdb2"/><stop offset="1" stop-color="#adb997"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" fill="url(#bg)"/>
+  <rect x="136" y="72" width="240" height="368" rx="48" fill="url(#face)"/>
+  <circle cx="256" cy="168" r="62" fill="#111316"/>
+  <circle cx="256" cy="168" r="46" fill="url(#dome)"/>
+  <rect x="160" y="252" width="192" height="92" rx="10" fill="#0e0f11"/>
+  <rect x="168" y="260" width="176" height="76" rx="6" fill="url(#lcd)"/>
+  <text x="256" y="318" text-anchor="middle" font-family="Consolas, monospace" font-size="50" font-weight="700" fill="#1b2417">lx</text>
+  <rect x="172" y="370" width="48" height="30" rx="8" fill="#4b515a"/>
+  <rect x="232" y="370" width="48" height="30" rx="8" fill="#4b515a"/>
+  <rect x="292" y="370" width="48" height="30" rx="8" fill="#d9483b"/>
+</svg>

@@ -3,26 +3,94 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#0e1114">
+<title>デジタル照度計 LX-26 | スマホカメラで照度（ルクス）を測る</title>
+<meta name="description" content="スマホのカメラで部屋や屋外の明るさ（照度・ルクス）を測れる無料のWeb照度計。リビング・寝室・屋外の目安や、寝る前・朝・作業中に適した明るさを判定します。インストール不要、オフラインでも使えます。">
+<link rel="canonical" href="https://m-masaki72.github.io/web-lux-meter/">
+<meta name="theme-color" content="#15171a">
+<meta name="color-scheme" content="dark">
+<meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="照度計">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>デジタル照度計</title>
+<meta name="format-detection" content="telephone=no">
 <link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<link rel="icon" href="icons/icon-192.png" sizes="192x192" type="image/png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="デジタル照度計 LX-26">
+<meta property="og:title" content="デジタル照度計 LX-26 | スマホカメラで照度を測る">
+<meta property="og:description" content="スマホのカメラで明るさ（ルクス）を測定。寝る前・朝・作業中にちょうどいい明るさかを判定するWeb照度計。">
+<meta property="og:url" content="https://m-masaki72.github.io/web-lux-meter/">
+<meta property="og:image" content="https://m-masaki72.github.io/web-lux-meter/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="ja_JP">
+<meta name="twitter:card" content="summary_large_image">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "@id": "https://m-masaki72.github.io/web-lux-meter/#app",
+      "name": "デジタル照度計 LX-26",
+      "alternateName": "Web Lux Meter",
+      "url": "https://m-masaki72.github.io/web-lux-meter/",
+      "description": "スマホのカメラで照度（ルクス）を推定するWeb照度計。場所や時間帯ごとの明るさの目安を表示します。",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Android, iOS, Windows, macOS",
+      "browserRequirements": "カメラ（getUserMedia）に対応したモダンブラウザ",
+      "inLanguage": "ja",
+      "isAccessibleForFree": true,
+      "image": "https://m-masaki72.github.io/web-lux-meter/icons/icon-512.png",
+      "screenshot": "https://m-masaki72.github.io/web-lux-meter/og.png",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "JPY" },
+      "featureList": [
+        "カメラによる照度（lx / fc）の推定",
+        "HOLD・MAX/MIN・測定値の記録",
+        "場所・時間帯ごとの照度の目安と判定",
+        "オフライン動作・ホーム画面への追加"
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://m-masaki72.github.io/web-lux-meter/#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "寝る前の部屋の明るさは何ルクスが目安？",
+          "acceptedAnswer": { "@type": "Answer", "text": "就寝1〜2時間前は50ルクス以下、できれば暖色の間接照明で30ルクス前後が目安です。明るい光は眠りを促すホルモン（メラトニン）の分泌を抑えます。" }
+        },
+        {
+          "@type": "Question",
+          "name": "リビングの照度はどれくらい？",
+          "acceptedAnswer": { "@type": "Answer", "text": "くつろぎ用途のリビングは75〜300ルクス程度が目安です。読書や勉強をする手元は500〜1,000ルクスあると目が疲れにくくなります。" }
+        },
+        {
+          "@type": "Question",
+          "name": "スマホのカメラで照度は正確に測れる？",
+          "acceptedAnswer": { "@type": "Answer", "text": "あくまで参考値です。機種やブラウザによって誤差があり、目安として±30〜50%程度ずれることがあります。正確な値が必要な場合は専用の照度計を使ってください。" }
+        }
+      ]
+    }
+  ]
+}
+</script>
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #0e1114;
-    --body: #1b2026;
-    --body-edge: #2a313a;
-    --lcd: #b9c7a3;
-    --lcd-dark: #a5b48e;
-    --ink: #1d2617;
-    --ghost: rgba(29, 38, 23, .09);
+    --bg: #15171a;
+    --card: #1f2328;
+    --card-edge: #2d333a;
     --text: #e6e9ec;
     --muted: #8d969f;
-    --accent: #f2b544;
+    --accent: #f2bd2a;
     --ok: #5cc98a;
     --warn: #f2b544;
     --bad: #ef6b5b;
@@ -30,204 +98,369 @@
     color-scheme: dark;
   }
   * { box-sizing: border-box; }
-  html, body { margin: 0; background: var(--bg); color: var(--text); }
+  html { background: var(--bg); }
   body {
+    margin: 0; color: var(--text);
+    background: radial-gradient(ellipse at 50% 0%, #23272d 0%, var(--bg) 60%) no-repeat, var(--bg);
     font: 15px/1.5 system-ui, -apple-system, "Hiragino Sans", "Noto Sans JP", sans-serif;
-    padding: max(12px, env(safe-area-inset-top)) 16px max(24px, env(safe-area-inset-bottom));
+    padding: 0 16px max(28px, env(safe-area-inset-bottom));
     -webkit-tap-highlight-color: transparent;
   }
-  .wrap { max-width: 480px; margin: 0 auto; }
+  .wrap { max-width: 420px; margin: 0 auto; }
 
-  /* 本体 */
-  .device {
-    background: linear-gradient(180deg, #232931, var(--body));
-    border: 1px solid var(--body-edge);
-    border-radius: 22px;
-    padding: 14px 14px 16px;
-    box-shadow: 0 10px 30px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.05);
+  /* ---- アプリバー ---- */
+  .appbar {
+    position: sticky; top: 0; z-index: 10;
+    display: flex; align-items: center; gap: 8px;
+    margin: 0 -16px 14px; padding: calc(env(safe-area-inset-top, 0px) + 8px) 16px 8px;
+    background: rgba(21, 23, 26, .82);
+    -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255,255,255,.05);
   }
-  .brand { display: flex; justify-content: space-between; align-items: center; margin: 0 4px 10px; }
-  .brand b { letter-spacing: .14em; font-size: 12px; color: var(--muted); font-weight: 600; }
-  .led { width: 8px; height: 8px; border-radius: 50%; background: #3a3f45; display: inline-block; margin-right: 6px; vertical-align: middle; }
-  .led.on { background: #ff5a4a; box-shadow: 0 0 8px #ff5a4a; }
-  .brand small { color: var(--muted); font-size: 11px; }
+  .appbar h1 { font-size: 16px; margin: 0; flex: 1; letter-spacing: .04em; }
+  .appbar h1 small { color: var(--muted); font-weight: 500; font-size: 12px; margin-left: 6px; }
+  .icon-btn {
+    display: inline-flex; align-items: center; gap: 4px;
+    font: 600 13px system-ui, sans-serif; color: var(--text);
+    background: #2a2f36; border: 1px solid #3a414a; border-radius: 999px;
+    padding: 7px 12px; cursor: pointer; touch-action: manipulation;
+  }
+  .icon-btn svg { width: 16px; height: 16px; }
+  .icon-btn.accent { background: var(--accent); color: #2a1e02; border-color: #c9922f; }
+
+  /* ---- 本体（ラバーホルスター） ---- */
+  .holster {
+    position: relative;
+    background: linear-gradient(180deg, #f8cb48 0%, #eeb321 45%, #d99b0d 100%);
+    border-radius: 44px 44px 52px 52px;
+    padding: 14px 14px 20px;
+    box-shadow: 0 22px 44px rgba(0,0,0,.6), 0 4px 10px rgba(0,0,0,.4),
+                inset 0 2px 0 rgba(255,255,255,.5), inset 0 -5px 0 rgba(0,0,0,.18);
+    user-select: none; -webkit-user-select: none;
+  }
+  .holster::before, .holster::after {
+    content: ""; position: absolute; top: 34%; width: 6px; height: 34%; border-radius: 3px;
+    background: repeating-linear-gradient(180deg, rgba(0,0,0,.2) 0 3px, transparent 3px 8px);
+  }
+  .holster::before { left: 4px; }
+  .holster::after { right: 4px; }
+  .face {
+    position: relative;
+    background: linear-gradient(180deg, #363a40 0%, #26292d 100%);
+    border-radius: 32px 32px 40px 40px;
+    padding: 16px 18px 18px;
+    box-shadow: inset 0 2px 5px rgba(0,0,0,.65), inset 0 0 0 1px rgba(255,255,255,.04);
+  }
+  .screw {
+    position: absolute; width: 11px; height: 11px; border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #9aa0a6, #4d5258 70%);
+    box-shadow: 0 1px 1px rgba(0,0,0,.6);
+  }
+  .screw::after { content: ""; position: absolute; left: 2px; right: 2px; top: 5px; height: 1.5px; background: #2a2d31; transform: rotate(35deg); }
+  .screw.tl { top: 14px; left: 16px; } .screw.tr { top: 14px; right: 16px; }
+  .screw.bl { bottom: 14px; left: 20px; } .screw.br { bottom: 14px; right: 20px; }
+
+  /* 受光部 */
+  .sensor { display: flex; flex-direction: column; align-items: center; }
+  .ring {
+    width: 128px; height: 128px; border-radius: 50%; display: grid; place-items: center;
+    background: radial-gradient(circle at 50% 38%, #3d4248, #101215 72%);
+    box-shadow: inset 0 3px 7px rgba(0,0,0,.7), 0 1px 0 rgba(255,255,255,.09);
+  }
+  .dome {
+    position: relative; width: 94px; height: 94px; border-radius: 50%; overflow: hidden;
+    background: radial-gradient(circle at 38% 30%, #ffffff 0%, #f2f2ec 38%, #d6d6ce 72%, #b4b4ab 100%);
+    box-shadow: 0 5px 12px rgba(0,0,0,.65), inset 0 -6px 12px rgba(0,0,0,.18);
+  }
+  .dome video {
+    position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+    opacity: 0; transition: opacity .5s; filter: saturate(.6);
+  }
+  .dome video.mirror { transform: scaleX(-1); }
+  .dome.live video { opacity: .55; }
+  .dome::after {
+    content: ""; position: absolute; inset: 0; border-radius: 50%; pointer-events: none;
+    background: radial-gradient(circle at 34% 26%, rgba(255,255,255,.95) 0 9%, rgba(255,255,255,.45) 26%, rgba(255,255,255,.18) 58%, rgba(0,0,0,.14) 100%);
+  }
+  .maker { text-align: center; margin: 10px 0 12px; line-height: 1.15; }
+  .maker b { font: italic 800 20px/1 system-ui, sans-serif; color: #f4f4f2; letter-spacing: .04em; }
+  .maker span { display: block; font-size: 10px; letter-spacing: .32em; color: #a3aab2; margin-top: 4px; }
+  .pled {
+    display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 8px; vertical-align: 3px;
+    background: #4a2320; box-shadow: inset 0 1px 1px rgba(0,0,0,.6);
+  }
+  .pled.on { background: #ff4b3a; box-shadow: 0 0 8px #ff4b3a, 0 0 2px #ffb3aa inset; }
 
   /* 液晶 */
+  .bezel {
+    background: #0e0f11; border-radius: 12px; padding: 8px;
+    box-shadow: inset 0 2px 6px #000, 0 1px 0 rgba(255,255,255,.07);
+  }
   .lcd {
-    background: linear-gradient(180deg, var(--lcd), var(--lcd-dark));
-    color: var(--ink);
-    border-radius: 10px;
-    padding: 10px 14px 12px;
-    box-shadow: inset 0 2px 6px rgba(0,0,0,.35);
-    font-family: var(--mono);
-    position: relative;
+    --ink: #1b2417; --ghost: rgba(27, 36, 23, .075);
+    position: relative; overflow: hidden;
+    background: linear-gradient(180deg, #c4cdb2 0%, #adb997 100%);
+    border-radius: 6px; padding: 7px 10px 6px;
+    box-shadow: inset 0 3px 8px rgba(0,0,0,.38);
+    font-family: var(--mono); color: var(--ink);
+    transition: background .35s, box-shadow .35s;
   }
-  .lcd-top { display: flex; justify-content: space-between; font-size: 12px; min-height: 18px; }
-  .lcd-top span { opacity: .25; }
-  .lcd-top span.on { opacity: 1; }
-  .readout { position: relative; text-align: right; line-height: 1; margin: 6px 0 2px; }
-  .readout .ghost, .readout .val { font-size: clamp(56px, 19vw, 84px); letter-spacing: .02em; }
-  .readout .digits { position: relative; display: inline-block; }
-  .readout .ghost { color: var(--ghost); position: absolute; right: 0; top: 0; white-space: pre; }
-  .readout .val { position: relative; }
-  .readout .unit { font-size: 22px; margin-left: 6px; }
-  .lcd-bottom { display: flex; justify-content: space-between; font-size: 13px; gap: 8px; }
-  .lcd-place { font-family: system-ui, sans-serif; font-weight: 700; font-size: 14px; margin-top: 6px; min-height: 21px; }
+  .lcd.backlit {
+    --ink: #0d281d; --ghost: rgba(13, 40, 29, .08);
+    background: radial-gradient(ellipse at 50% 45%, #c2f5dc 0%, #86d6b2 85%);
+    box-shadow: inset 0 3px 8px rgba(0,0,0,.25), 0 0 22px rgba(134,214,178,.5);
+  }
+  .lcd::after {
+    content: ""; position: absolute; inset: 0; pointer-events: none;
+    background: linear-gradient(160deg, rgba(255,255,255,.18) 0%, rgba(255,255,255,0) 38%);
+  }
+  .ann-row { display: flex; justify-content: space-between; align-items: center; font-size: 10.5px; height: 15px; letter-spacing: .02em; }
+  .ann { opacity: .075; transition: opacity .08s; }
+  .ann.on, .lcd.test .ann { opacity: 1; }
+  .ann svg { width: 20px; height: 10px; display: block; fill: none; stroke: currentColor; stroke-width: 1.5; }
+  .ann .fill { fill: currentColor; stroke: none; }
+  .main { display: flex; align-items: flex-end; gap: 4px; margin: 4px 0 2px; }
+  .main svg { flex: 1; min-width: 0; height: auto; display: block; }
+  .units { display: flex; flex-direction: column; font-size: 17px; line-height: 1.05; padding-bottom: 2px; width: 24px; }
+  .s, .dp, .bs { fill: var(--ghost); }
+  .s.on, .dp.on, .bs.on, .lcd.test .s, .lcd.test .dp, .lcd.test .bs { fill: var(--ink); }
+  .bargraph { margin-top: 4px; }
+  .bargraph svg { width: 100%; height: 10px; display: block; }
+  .bar-scale { position: relative; height: 13px; font-size: 9px; margin-top: 1px; }
+  .bar-scale span { position: absolute; transform: translateX(-50%); }
+  .bar-scale span:first-child { transform: none; }
+  .bar-scale span:last-child { transform: translateX(-100%); }
 
-  /* 対数バー */
-  .scale { margin: 14px 2px 0; }
-  .bar {
-    position: relative; height: 14px; border-radius: 7px;
-    background: linear-gradient(90deg, #11131a 0%, #2b2f55 16%, #6a4d8a 33%, #c27a3a 50%, #e9b44c 66%, #f5dd84 83%, #fffbe8 100%);
+  /* キー */
+  .keys { display: grid; grid-template-columns: repeat(3, 1fr); gap: 11px 12px; margin-top: 16px; }
+  .key {
+    appearance: none; border: 0; cursor: pointer; touch-action: manipulation;
+    border-radius: 12px; padding: 9px 4px 8px;
+    background: linear-gradient(180deg, #4b515a 0%, #3a3f46 100%);
+    color: #edf0f2; font: 700 12px/1.15 system-ui, sans-serif; letter-spacing: .06em;
+    box-shadow: 0 3px 0 #141619, 0 5px 7px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.14);
+    transition: transform .05s, box-shadow .05s;
   }
-  .marker {
-    position: absolute; top: -5px; width: 4px; height: 24px; margin-left: -2px;
-    background: #fff; border-radius: 2px; box-shadow: 0 0 0 1px #000, 0 0 8px rgba(255,255,255,.7);
-    transition: left .25s ease-out; left: 0;
+  .key small { display: block; font-size: 10px; font-weight: 500; letter-spacing: 0; color: #9ba4ad; margin-top: 3px; }
+  .key:active, .key.pressed { transform: translateY(2px); box-shadow: 0 1px 0 #141619, 0 2px 3px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.08); }
+  .key.lit { color: var(--accent); }
+  .key.power {
+    grid-column: 1 / -1; padding: 11px 4px;
+    background: linear-gradient(180deg, #d9483b 0%, #b5342a 100%);
+    box-shadow: 0 3px 0 #641a14, 0 5px 7px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.22);
+    font-size: 13px;
   }
-  .ticks { position: relative; height: 18px; font: 11px var(--mono); color: var(--muted); }
-  .ticks span { position: absolute; transform: translateX(-50%); top: 3px; }
-  .ticks span:first-child { transform: none; }
-  .ticks span:last-child { transform: translateX(-100%); }
+  .key.power small { color: #ffd2cc; display: inline; margin-left: 6px; }
+  .pwr { width: 15px; height: 15px; vertical-align: -2px; margin-right: 6px; }
+  .key.power:active { box-shadow: 0 1px 0 #641a14, inset 0 1px 0 rgba(255,255,255,.12); }
+  .spec { text-align: center; font: 9.5px var(--mono); letter-spacing: .12em; color: #7f8790; margin-top: 14px; }
 
-  /* ボタン */
-  .buttons { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 14px; }
-  button {
-    font: inherit; font-size: 13px; color: var(--text);
-    background: #2c333c; border: 1px solid #3a434e; border-radius: 12px;
-    padding: 11px 4px; cursor: pointer; box-shadow: 0 2px 0 #11151a;
-  }
-  button:active { transform: translateY(1px); box-shadow: none; }
-  button.primary { background: var(--accent); color: #241a05; border-color: #c9922f; font-weight: 700; }
-  button.active { background: #4a3d1c; border-color: var(--accent); color: var(--accent); }
-  .start { width: 100%; margin-top: 14px; padding: 14px; font-size: 16px; }
-
-  .preview-row { display: flex; gap: 10px; align-items: center; margin-top: 12px; }
-  video { width: 72px; height: 54px; object-fit: cover; border-radius: 8px; background: #000; border: 1px solid var(--body-edge); }
-  .status { font-size: 12px; color: var(--muted); line-height: 1.45; }
+  /* 本体の下 */
+  .status { font-size: 12px; color: var(--muted); margin: 14px 4px 0; min-height: 18px; text-align: center; }
   .status .err { color: var(--bad); }
+  .disclaimer { margin: 6px 4px 0; font-size: 12px; color: var(--accent); text-align: center; }
 
-  /* セクション */
   h2 { font-size: 15px; margin: 26px 4px 10px; letter-spacing: .04em; }
-  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
-  .chips button { padding: 8px 12px; border-radius: 999px; font-size: 13px; }
-  .judge {
-    margin-top: 10px; background: var(--body); border: 1px solid var(--body-edge);
-    border-radius: 14px; padding: 12px 14px;
+  .card { background: var(--card); border: 1px solid var(--card-edge); border-radius: 16px; padding: 12px 14px; }
+  .now { font-size: 13px; color: var(--muted); }
+  .now b { color: var(--text); font-size: 16px; margin-left: 4px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0; }
+  .chip {
+    font: inherit; font-size: 13px; color: var(--text); cursor: pointer; touch-action: manipulation;
+    background: #2a2f36; border: 1px solid #3a414a; border-radius: 999px; padding: 7px 12px;
   }
-  .judge .verdict { font-weight: 800; font-size: 18px; }
-  .judge .range { color: var(--muted); font-size: 12px; }
-  .judge p { margin: 6px 0 0; font-size: 13px; }
+  .chip.active { background: #4a3d1c; border-color: var(--accent); color: var(--accent); }
+  .verdict { font-weight: 800; font-size: 18px; }
+  .range { color: var(--muted); font-size: 12px; }
+  .tip { margin: 6px 0 0; font-size: 13px; }
 
-  .places { list-style: none; margin: 0; padding: 0; background: var(--body); border: 1px solid var(--body-edge); border-radius: 14px; overflow: hidden; }
-  .places li { display: flex; justify-content: space-between; gap: 10px; padding: 9px 14px; border-top: 1px solid var(--body-edge); font-size: 14px; }
-  .places li:first-child { border-top: 0; }
-  .places li .lx { font-family: var(--mono); color: var(--muted); white-space: nowrap; }
-  .places li.hit { background: #3a3220; }
-  .places li.hit .lx { color: var(--accent); }
+  /* 記録 */
+  .log { list-style: none; margin: 0; padding: 0; }
+  .log li { display: grid; grid-template-columns: auto 1fr auto; gap: 10px; align-items: baseline; padding: 7px 0; border-top: 1px solid var(--card-edge); font-size: 13px; }
+  .log li:first-child { border-top: 0; }
+  .log time { color: var(--muted); font: 12px var(--mono); }
+  .log .v { font: 15px var(--mono); text-align: right; }
+  .log .p { color: #c3c9cf; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .log-empty { color: var(--muted); font-size: 13px; margin: 0; }
+  .log-actions { display: flex; justify-content: flex-end; margin-top: 8px; }
 
-  details { background: var(--body); border: 1px solid var(--body-edge); border-radius: 14px; padding: 10px 14px; margin-top: 10px; }
+  /* 早見表（印刷ラベル風） */
+  .paper {
+    background: #f3efe3; color: #2b2925; border-radius: 6px; padding: 14px 16px 10px;
+    box-shadow: 0 8px 20px rgba(0,0,0,.45);
+    background-image: linear-gradient(rgba(0,0,0,.025) 1px, transparent 1px);
+    background-size: 100% 4px;
+  }
+  .paper h3 { margin: 0 0 6px; font-size: 13px; letter-spacing: .2em; border-bottom: 2px solid #2b2925; padding-bottom: 4px; }
+  .places { list-style: none; margin: 0; padding: 0; }
+  .places li { display: flex; justify-content: space-between; gap: 10px; padding: 7px 4px; border-bottom: 1px dashed #b9b2a1; font-size: 14px; }
+  .places li:last-child { border-bottom: 0; }
+  .places .lx { font-family: var(--mono); white-space: nowrap; color: #5c574c; }
+  .places li.hit { background: #ffe07a; border-radius: 4px; }
+  .places li.hit .lx { color: #2b2925; font-weight: 700; }
+
+  details { background: var(--card); border: 1px solid var(--card-edge); border-radius: 14px; padding: 10px 14px; margin-top: 10px; }
   summary { cursor: pointer; font-weight: 600; font-size: 14px; }
-  details p, details li { font-size: 13px; color: #c3c9cf; }
+  details p, details li, details dd { font-size: 13px; color: #c3c9cf; }
   details ol, details ul { padding-left: 20px; margin: 6px 0; }
-  .calib-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-top: 8px; }
+  details dt { font-weight: 700; font-size: 13px; margin-top: 10px; }
+  details dd { margin: 2px 0 0; }
+  .calib-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-top: 8px; font-size: 13px; }
   .calib-row input {
     width: 110px; font: 15px var(--mono); padding: 8px 10px; border-radius: 10px;
     border: 1px solid #3a434e; background: #12161a; color: var(--text);
   }
-  .calib-row button { padding: 8px 12px; }
-  .disclaimer { margin: 12px 0 0; font-size: 12px; color: var(--accent); text-align: center; }
   .note { font-size: 11px; color: var(--muted); margin: 18px 4px 0; }
+
+  .toast {
+    position: fixed; left: 50%; bottom: calc(env(safe-area-inset-bottom, 0px) + 24px); z-index: 20;
+    transform: translate(-50%, 20px); opacity: 0; pointer-events: none;
+    background: #f2f2f0; color: #1b1d20; font-size: 13px; font-weight: 600;
+    padding: 10px 16px; border-radius: 999px; box-shadow: 0 6px 18px rgba(0,0,0,.5);
+    transition: opacity .2s, transform .2s; max-width: calc(100% - 32px); text-align: center;
+  }
+  .toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 </style>
 </head>
 <body>
-<div class="wrap">
+<header class="appbar">
+  <h1>照度計<small>LX-26</small></h1>
+  <button class="icon-btn accent" id="installBtn" hidden>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0-5-5m5 5 5-5M5 21h14"/></svg>インストール
+  </button>
+  <button class="icon-btn" id="shareBtn" aria-label="共有">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/></svg>共有
+  </button>
+</header>
 
-  <div class="device">
-    <div class="brand">
-      <b><span class="led" id="led"></span>DIGITAL LUX METER</b>
-      <small id="srcLabel">STANDBY</small>
-    </div>
+<main class="wrap">
+  <div class="holster">
+    <div class="face">
+      <i class="screw tl"></i><i class="screw tr"></i><i class="screw bl"></i><i class="screw br"></i>
 
-    <div class="lcd">
-      <div class="lcd-top">
-        <span id="indHold">HOLD</span>
-        <span id="indOver">OVER</span>
-        <span id="indRel">REL</span>
-        <span id="indCam">CAM</span>
+      <div class="sensor">
+        <div class="ring"><div class="dome" id="dome"><video id="video" playsinline muted></video></div></div>
       </div>
-      <div class="readout">
-        <span class="digits"><span class="ghost" id="ghost">88888</span><span class="val" id="val">-----</span></span><span class="unit">lx</span>
+      <div class="maker"><b><i class="pled" id="pled"></i>LX-26</b><span>DIGITAL LUX METER</span></div>
+
+      <div class="bezel">
+        <div class="lcd" id="lcd" role="img" aria-label="照度表示">
+          <div class="ann-row">
+            <span class="ann" id="aBat"><svg viewBox="0 0 20 10"><rect x="1" y="1" width="16" height="8" rx="1"/><rect class="fill" x="18" y="3.5" width="1.5" height="3"/><rect class="fill" x="3" y="3" width="12" height="4"/></svg></span>
+            <span class="ann" id="aAuto">AUTO</span>
+            <span class="ann" id="aHold">HOLD</span>
+            <span class="ann" id="aMax">MAX</span>
+            <span class="ann" id="aMin">MIN</span>
+            <span class="ann" id="aRel">REL</span>
+            <span class="ann" id="aOver">OVER</span>
+            <span class="ann" id="aMem">MEM</span>
+          </div>
+          <div class="main">
+            <svg id="seg" viewBox="0 0 330 96" aria-hidden="true"></svg>
+            <div class="units"><span class="ann" id="aLx">lx</span><span class="ann" id="aFc">fc</span></div>
+          </div>
+          <div class="bargraph" aria-hidden="true">
+            <svg id="bar" viewBox="0 0 358 10" preserveAspectRatio="none"></svg>
+            <div class="bar-scale">
+              <span style="left:0%">0.1</span><span style="left:16.67%">1</span><span style="left:33.33%">10</span>
+              <span style="left:50%">100</span><span style="left:66.67%">1k</span><span style="left:83.33%">10k</span>
+              <span style="left:100%">100k</span>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="lcd-bottom">
-        <span>MIN <b id="min">---</b></span>
-        <span>MAX <b id="max">---</b></span>
+
+      <div class="keys">
+        <button class="key" id="kHold">HOLD<small>値を固定</small></button>
+        <button class="key" id="kMax">MAX/MIN<small>長押しで消去</small></button>
+        <button class="key" id="kUnit">UNIT<small>lx / fc</small></button>
+        <button class="key" id="kLight">LIGHT<small>バックライト</small></button>
+        <button class="key" id="kCam">SENSOR<small>前 / 後カメラ</small></button>
+        <button class="key" id="kRec">REC<small>記録する</small></button>
+        <button class="key power" id="kPower"><svg class="pwr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 3v8"/><path d="M6.3 6.8a8 8 0 1 0 11.4 0"/></svg>POWER<small id="kPowerSub">測定開始</small></button>
       </div>
-      <div class="lcd-place" id="placeNow">　</div>
+      <div class="spec">AUTO RANGE 0.1–99,999 lx · CAMERA SENSING</div>
     </div>
-
-    <div class="scale" aria-hidden="true">
-      <div class="bar"><div class="marker" id="marker"></div></div>
-      <div class="ticks">
-        <span style="left:0%">0.1</span>
-        <span style="left:16.67%">1</span>
-        <span style="left:33.33%">10</span>
-        <span style="left:50%">100</span>
-        <span style="left:66.67%">1k</span>
-        <span style="left:83.33%">10k</span>
-        <span style="left:100%">100k</span>
-      </div>
-    </div>
-
-    <button class="primary start" id="startBtn">測定開始</button>
-
-    <div class="buttons" id="ctrl" hidden>
-      <button id="holdBtn">HOLD</button>
-      <button id="resetBtn">MIN/MAX<br>リセット</button>
-      <button id="flipBtn">カメラ<br>切替</button>
-      <button id="stopBtn">停止</button>
-    </div>
-
-    <div class="preview-row">
-      <video id="video" playsinline muted></video>
-      <div class="status" id="status">「測定開始」を押すとカメラを使って照度を推定します。</div>
-    </div>
-    <p class="disclaimer">⚠ 測定値はスマホカメラによる推定で、<b>あくまで参考値</b>です。</p>
   </div>
 
-  <h2>いまの時間帯・用途の目安</h2>
-  <div class="chips" id="scenes"></div>
-  <div class="judge" id="judge"></div>
+  <p class="status" id="status">POWER を押すとカメラで照度を測ります。</p>
+  <p class="disclaimer">⚠ 測定値はスマホカメラによる推定で、<b>あくまで参考値</b>です。</p>
 
-  <h2>場所・環境の目安</h2>
-  <ul class="places" id="places"></ul>
+  <h2>いまの時間帯・用途の目安</h2>
+  <div class="card">
+    <div class="now">いまの明るさ<b id="placeNow">—</b></div>
+    <div class="chips" id="scenes"></div>
+    <div id="judge"></div>
+  </div>
+
+  <h2>測定記録</h2>
+  <div class="card">
+    <ul class="log" id="log"></ul>
+    <p class="log-empty" id="logEmpty">REC を押すと、いまの値を時刻つきで記録します。部屋ごとの比較に便利です。</p>
+    <div class="log-actions" id="logActions" hidden>
+      <button class="chip" id="logShare">記録を共有</button>
+      <button class="chip" id="logClear" style="margin-left:6px">すべて削除</button>
+    </div>
+  </div>
+
+  <h2>照度の早見表</h2>
+  <div class="paper">
+    <h3>場所・環境の目安</h3>
+    <ul class="places" id="places"></ul>
+  </div>
 
   <details>
     <summary>上手に測るコツ</summary>
     <ol>
-      <li><b>机や床の明るさ</b>：インカメラ（前面）を上に向けて、測りたい面に置きます。レンズに白いコピー用紙やティッシュを1枚かぶせると、より照度計らしい値になります。</li>
-      <li><b>部屋の雰囲気</b>：背面カメラを部屋の中央に向けてかざします（壁や床の色で値が変わります）。</li>
-      <li>値は数秒で安定します。光源を直接のぞき込むと過大に出ます。</li>
+      <li><b>机や床の明るさ</b>：前カメラを上に向けて測りたい面に置きます。レンズに白いコピー用紙やティッシュを1枚かぶせると、より照度計らしい値になります。</li>
+      <li><b>部屋の雰囲気</b>：SENSOR で後カメラに切り替え、部屋の中央に向けてかざします（壁や床の色で値が変わります）。</li>
+      <li>値は数秒で安定します。光源を直接のぞき込むと大きめに出ます。</li>
+      <li>測定中は画面が自動で消えないようになっています。</li>
     </ol>
   </details>
 
-  <details id="calibBox">
+  <details>
+    <summary>ホーム画面に追加（アプリとして使う）</summary>
+    <ul>
+      <li><b>Android（Chrome）</b>：上の「インストール」ボタン、またはメニュー →「アプリをインストール」。</li>
+      <li><b>iPhone（Safari）</b>：共有ボタン →「ホーム画面に追加」。</li>
+      <li>一度開けば、オフラインでも起動できます。</li>
+    </ul>
+  </details>
+
+  <details>
     <summary>補正（キャリブレーション）</summary>
-    <p>スマホの機種ごとにレンズ・センサー特性が違うため、正確な照度計や明るさが分かっている場所（例：晴天の屋外日向 ≒ 100,000 lx）で一度合わせると精度が上がります。</p>
+    <p>スマホの機種ごとにレンズやセンサーの特性が違います。正確な照度計がある場所や、明るさの分かっている場所（例：晴天の日向 ≒ 100,000 lx）で一度合わせると精度が上がります。補正値はカメラ（前／後）ごとに保存されます。</p>
     <div class="calib-row">
       <input id="knownLux" type="number" inputmode="decimal" min="0" placeholder="正しい値">
       <span>lx に合わせる</span>
-      <button id="calibBtn">補正</button>
+      <button class="chip" id="calibBtn">補正</button>
     </div>
     <div class="calib-row">
       <span>補正係数</span>
       <input id="calibInput" type="number" inputmode="decimal" step="0.01" min="0.01">
-      <button id="calibReset">初期化</button>
+      <button class="chip" id="calibReset">初期化</button>
     </div>
   </details>
 
+  <details>
+    <summary>よくある質問</summary>
+    <dl>
+      <dt>寝る前の部屋の明るさは何ルクスが目安？</dt>
+      <dd>就寝1〜2時間前は50ルクス以下、できれば暖色の間接照明で30ルクス前後が目安です。明るい光は眠りを促すホルモン（メラトニン）の分泌を抑えます。</dd>
+      <dt>リビングの照度はどれくらい？</dt>
+      <dd>くつろぎ用途のリビングは75〜300ルクス程度が目安です。読書や勉強をする手元は500〜1,000ルクスあると目が疲れにくくなります。</dd>
+      <dt>スマホのカメラで照度は正確に測れる？</dt>
+      <dd>あくまで参考値です。機種やブラウザによって誤差があり、目安として±30〜50%程度ずれることがあります。正確な値が必要な場合は専用の照度計を使ってください。</dd>
+    </dl>
+  </details>
+
   <p class="note">※表示される照度は<b>あくまで参考値</b>です。スマホカメラによる推定のため、専用の照度計ほど正確ではありません（目安として±30〜50%程度、端末によってはさらに大きくずれます）。目安の数値は JIS Z 9110 の照度基準や睡眠・概日リズムに関する一般的な推奨値をもとにした参考値です。</p>
-</div>
+</main>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script>
 (() => {
@@ -262,21 +495,33 @@
       tip: "夕食後のくつろぎは 75〜300 lx 程度。夜が近づくにつれて少しずつ暗く・暖色にしていくのがおすすめです。" },
   ];
 
+  const LX_PER_FC = 10.764;
+
   // ---- DOM ----
   const $ = (id) => document.getElementById(id);
   const video = $("video");
+  const lcd = $("lcd");
   const canvas = document.createElement("canvas");
   canvas.width = 64; canvas.height = 48;
   const ctx = canvas.getContext("2d", { willReadFrequently: true });
 
+  // ---- 保存 ----
+  const store = {
+    get(k, d) { try { const v = localStorage.getItem(k); return v === null ? d : v; } catch { return d; } },
+    set(k, v) { try { localStorage.setItem(k, v); } catch {} },
+  };
+
   // ---- 状態 ----
-  let stream = null, track = null, sensor = null;
+  let stream = null, track = null, sensor = null, wakeLock = null;
   let facing = "user";
-  let mode = "idle";          // idle | sensor | manual | auto
-  let caps = {}, expT = 0, iso = null, settleUntil = 0;
-  let ema = null, hold = false, minV = Infinity, maxV = -Infinity;
+  let mode = "idle";          // idle | starting | sensor | manual | auto
+  let caps = {}, expT = 0, iso = null, settleUntil = 0, expInfo = "";
+  let ema = null, minV = Infinity, maxV = -Infinity;
+  let hold = false, heldVal = null, dispMode = "now";   // now | max | min
+  let unit = store.get("luxUnit", "lx") === "fc" ? "fc" : "lx";
   let lastMeasure = 0, rafId = 0, over = false;
   let scene = guessScene();
+  let calib = 1;
   const F_NUMBER = 1.8;       // スマホカメラの一般的な絞り値（補正係数で吸収）
 
   // sRGB → リニア変換テーブル
@@ -286,45 +531,120 @@
     LIN[i] = c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
   }
 
-  // ---- 補正係数の保存 ----
-  const store = {
-    get(k, d) { try { const v = localStorage.getItem(k); return v === null ? d : v; } catch { return d; } },
-    set(k, v) { try { localStorage.setItem(k, v); } catch {} },
+  // ---- 7セグ液晶の生成 ----
+  const SEGMAP = {
+    "0": "abcdef", "1": "bc", "2": "abdeg", "3": "abcdg", "4": "bcfg", "5": "acdfg", "6": "acdefg",
+    "7": "abc", "8": "abcdefg", "9": "abcdfg", "-": "g", " ": "", "O": "abcdef", "L": "def",
+    "E": "adefg", "r": "eg", "n": "ceg", "o": "cdeg", "P": "abefg", "F": "aefg", "C": "adef", "H": "bcefg",
   };
-  const calibKey = () => "luxCalib_" + facing;
-  let calib = 1;
-  function loadCalib() {
-    calib = parseFloat(store.get(calibKey(), "1")) || 1;
-    $("calibInput").value = calib.toFixed(3);
+  const DIGITS = 5, W = 50, H = 88, T = 9, G = 1.3, PITCH = 64;
+  const segEls = [], dpEls = [];
+  (function buildSeg() {
+    const t = T / 2, L = t, R = W - t, top = t, mid = H / 2, bot = H - t;
+    const hs = (x1, x2, y) => `${x1+G},${y} ${x1+G+t},${y-t} ${x2-G-t},${y-t} ${x2-G},${y} ${x2-G-t},${y+t} ${x1+G+t},${y+t}`;
+    const vs = (x, y1, y2) => `${x},${y1+G} ${x+t},${y1+G+t} ${x+t},${y2-G-t} ${x},${y2-G} ${x-t},${y2-G-t} ${x-t},${y1+G+t}`;
+    const shapes = { a: hs(L, R, top), b: vs(R, top, mid), c: vs(R, mid, bot), d: hs(L, R, bot), e: vs(L, mid, bot), f: vs(L, top, mid), g: hs(L, R, mid) };
+    const ns = "http://www.w3.org/2000/svg";
+    const svg = $("seg");
+    for (let i = 0; i < DIGITS; i++) {
+      const g = document.createElementNS(ns, "g");
+      g.setAttribute("transform", `translate(${i * PITCH + 14},4) skewX(-6)`);
+      const els = {};
+      for (const k in shapes) {
+        const p = document.createElementNS(ns, "polygon");
+        p.setAttribute("points", shapes[k]); p.setAttribute("class", "s");
+        g.appendChild(p); els[k] = p;
+      }
+      svg.appendChild(g); segEls.push(els);
+      const dp = document.createElementNS(ns, "circle");
+      dp.setAttribute("cx", i * PITCH + 61); dp.setAttribute("cy", 88); dp.setAttribute("r", 4.6);
+      dp.setAttribute("class", "dp");
+      svg.appendChild(dp); dpEls.push(dp);
+    }
+  })();
+
+  const BAR_N = 36;
+  const barEls = [];
+  (function buildBar() {
+    const ns = "http://www.w3.org/2000/svg";
+    for (let i = 0; i < BAR_N; i++) {
+      const r = document.createElementNS(ns, "rect");
+      r.setAttribute("x", i * 10); r.setAttribute("y", 0); r.setAttribute("width", 8); r.setAttribute("height", 10);
+      r.setAttribute("class", "bs");
+      $("bar").appendChild(r); barEls.push(r);
+    }
+  })();
+
+  function toCells(text) {
+    const cells = [];
+    for (const ch of text) {
+      if (ch === ".") { if (cells.length) cells[cells.length - 1].dp = true; }
+      else cells.push({ ch, dp: false });
+    }
+    while (cells.length < DIGITS) cells.unshift({ ch: " ", dp: false });
+    return cells.slice(-DIGITS);
+  }
+  function drawText(text) {
+    toCells(text).forEach((c, i) => {
+      const on = SEGMAP[c.ch] || "";
+      for (const k in segEls[i]) segEls[i][k].classList.toggle("on", on.includes(k));
+      dpEls[i].classList.toggle("on", c.dp);
+    });
+  }
+  function dispText(lux) {
+    if (lux === null || !isFinite(lux)) return "-----";
+    const v = unit === "fc" ? lux / LX_PER_FC : lux;
+    if (v >= 99999.5) return "OL";
+    if (v < 10) return v.toFixed(2);
+    if (v < 100) return v.toFixed(1);
+    return String(Math.round(v));
+  }
+  const logPos = (v) => Math.min(1, Math.max(0, (Math.log10(Math.max(v, 0.1)) + 1) / 6));
+  function drawBar(lux) {
+    const n = lux === null || !isFinite(lux) ? 0 : Math.max(1, Math.round(logPos(lux) * BAR_N));
+    barEls.forEach((r, i) => r.classList.toggle("on", i < n));
+  }
+  const ann = (id, on) => $(id).classList.toggle("on", !!on);
+
+  function clearLcd() {
+    drawText("     "); drawBar(null);
+    lcd.querySelectorAll(".ann").forEach((a) => a.classList.remove("on"));
   }
 
   // ---- 表示 ----
   function fmt(v) {
     if (!isFinite(v)) return "-----";
     if (v < 10) return v.toFixed(1);
-    if (v < 100000) return Math.round(v).toLocaleString("en-US");
-    return "99,999+";
+    return Math.round(v).toLocaleString("en-US");
   }
-  const logPos = (v) => Math.min(100, Math.max(0, (Math.log10(Math.max(v, 0.1)) + 1) / 6 * 100));
+  const placeOf = (v) => PLACES.find((x) => v >= x.lo && v < x.hi) || PLACES[0];
 
-  function render(v) {
-    if (!hold) {
-      const txt = fmt(v);
-      $("val").textContent = txt;
-      $("ghost").textContent = txt.replace(/\d/g, "8").replace("+", " ");
-      $("marker").style.left = logPos(v) + "%";
-    }
-    const shown = hold ? parseFloat($("val").dataset.v || v) : v;
-    if (!hold) $("val").dataset.v = v;
-    minV = Math.min(minV, v); maxV = Math.max(maxV, v);
-    $("min").textContent = fmt(minV);
-    $("max").textContent = fmt(maxV);
-    $("indOver").classList.toggle("on", over);
+  function shownValue() {
+    if (hold) return heldVal;
+    if (dispMode === "max") return isFinite(maxV) ? maxV : null;
+    if (dispMode === "min") return isFinite(minV) ? minV : null;
+    return ema;
+  }
 
-    const p = PLACES.find((x) => shown >= x.lo && shown < x.hi) || PLACES[0];
-    $("placeNow").textContent = "≒ " + p.name;
+  function updateDisplay() {
+    if (mode === "idle") return;
+    const v = shownValue();
+    drawText(dispText(v));
+    drawBar(v);
+    ann("aBat", true); ann("aAuto", true);
+    ann("aHold", hold); ann("aMax", dispMode === "max"); ann("aMin", dispMode === "min");
+    ann("aRel", mode === "auto"); ann("aOver", over);
+    ann("aLx", unit === "lx"); ann("aFc", unit === "fc");
+    lcd.setAttribute("aria-label", v === null ? "測定中" : `${fmt(v)} ルクス`);
+    updateInfo(v);
+  }
+
+  function updateInfo(v) {
+    const hasV = v !== null && isFinite(v);
+    const p = hasV ? placeOf(v) : null;
+    $("placeNow").textContent = p ? `≒ ${p.name}` : "—";
     [...$("places").children].forEach((li, i) => li.classList.toggle("hit", PLACES[i] === p));
-    renderJudge(shown);
+    renderJudge(hasV ? v : null);
   }
 
   function renderJudge(v) {
@@ -333,18 +653,26 @@
                   s.lo === 0 ? `${s.hi.toLocaleString()} lx 以下` :
                   `${s.lo.toLocaleString()}〜${s.hi.toLocaleString()} lx`;
     let verdict = "測定待ち", color = "var(--muted)";
-    if (v !== null && isFinite(v)) {
+    if (v !== null) {
       if (v < s.lo) { verdict = "暗すぎ"; color = "var(--warn)"; }
       else if (v > s.hi) { verdict = "明るすぎ"; color = "var(--bad)"; }
       else { verdict = "ちょうどいい"; color = "var(--ok)"; }
     }
     $("judge").innerHTML =
       `<div class="verdict" style="color:${color}">${s.name}：${verdict}</div>` +
-      `<div class="range">目安 ${range}</div><p>${s.tip}</p>`;
+      `<div class="range">目安 ${range}</div><p class="tip">${s.tip}</p>`;
   }
 
   function setStatus(html) { $("status").innerHTML = html; }
-  function setInd(id, on) { $(id).classList.toggle("on", on); }
+
+  let toastTimer = 0;
+  function toast(msg) {
+    const t = $("toast");
+    t.textContent = msg; t.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove("show"), 2200);
+  }
+  function buzz(ms = 8) { try { navigator.vibrate && navigator.vibrate(ms); } catch {} }
 
   function guessScene() {
     const h = new Date().getHours();
@@ -353,6 +681,13 @@
     if (h >= 17 && h < 21) return "relax";
     if (h >= 21 || h < 2) return "sleep";
     return "night";
+  }
+
+  // ---- 補正係数 ----
+  const calibKey = () => "luxCalib_" + facing;
+  function loadCalib() {
+    calib = parseFloat(store.get(calibKey(), "1")) || 1;
+    $("calibInput").value = calib.toFixed(3);
   }
 
   // ---- 測定 ----
@@ -428,11 +763,11 @@
     push(lux * calib);
   }
 
-  let expInfo = "";
   function push(v) {
     ema = ema === null ? v : ema + (v - ema) * 0.35;
-    render(ema);
-    if (mode === "manual") setStatus(`カメラ露出制御で測定中（${expInfo}）`);
+    minV = Math.min(minV, ema); maxV = Math.max(maxV, ema);
+    updateDisplay();
+    if (mode === "manual") setStatus(`${facing === "user" ? "前" : "後"}カメラ・露出制御で測定中（${expInfo}）`);
   }
 
   function loop(t) {
@@ -448,15 +783,14 @@
     try {
       sensor = new AmbientLightSensor({ frequency: 5 });
       await new Promise((ok, ng) => {
-        sensor.onreading = () => { ok(); };
+        sensor.onreading = () => ok();
         sensor.onerror = (e) => ng(e.error);
         sensor.start();
         setTimeout(() => ng(new Error("timeout")), 1500);
       });
       sensor.onreading = () => push(sensor.illuminance);
       mode = "sensor";
-      $("srcLabel").textContent = "LIGHT SENSOR";
-      setStatus("端末の照度センサーで測定中（高精度）");
+      setStatus("端末の照度センサーで測定中");
       return true;
     } catch {
       try { sensor && sensor.stop(); } catch {}
@@ -472,28 +806,28 @@
       video: { facingMode: { ideal: facing }, width: { ideal: 640 }, height: { ideal: 480 } },
     });
     video.srcObject = stream;
+    video.classList.toggle("mirror", facing === "user");
     await video.play();
     track = stream.getVideoTracks()[0];
     caps = track.getCapabilities ? track.getCapabilities() : {};
     loadCalib();
 
+    mode = "auto";
     if (caps.exposureMode && caps.exposureMode.includes("manual") && caps.exposureTime) {
       try {
         iso = caps.iso ? Math.min(caps.iso.max, Math.max(caps.iso.min, 100)) : null;
         expT = Math.min(caps.exposureTime.max, Math.max(caps.exposureTime.min, 100));
         await applyExposure();
         mode = "manual";
-      } catch { mode = "auto"; }
-    } else {
-      mode = "auto";
+      } catch {}
     }
-    setInd("indCam", true);
-    setInd("indRel", mode === "auto");
-    $("srcLabel").textContent = facing === "user" ? "FRONT CAM" : "REAR CAM";
+    $("dome").classList.add("live");
     if (mode === "auto") {
-      setStatus("この端末・ブラウザはカメラの露出制御に非対応のため、<b>相対値（参考程度）</b>の表示です。Android の Chrome だと精度が上がります。");
+      setStatus("この端末は露出制御に非対応のため<b>相対値（REL）</b>表示です。Android の Chrome だと精度が上がります。");
+    } else {
+      setStatus("測定中…");
     }
-    ema = null;
+    ema = null; over = false;
     cancelAnimationFrame(rafId);
     rafId = requestAnimationFrame(loop);
   }
@@ -502,59 +836,163 @@
     cancelAnimationFrame(rafId);
     if (stream) stream.getTracks().forEach((t) => t.stop());
     stream = null; track = null;
-    setInd("indCam", false);
+    $("dome").classList.remove("live");
   }
 
-  async function start() {
-    $("startBtn").hidden = true;
-    $("ctrl").hidden = false;
-    $("led").classList.add("on");
-    resetMinMax();
+  async function keepAwake() {
+    try { if ("wakeLock" in navigator) wakeLock = await navigator.wakeLock.request("screen"); } catch {}
+  }
+
+  async function powerOn() {
+    mode = "starting";
+    $("pled").classList.add("on");
+    $("kPowerSub").textContent = "停止";
+    hold = false; heldVal = null; dispMode = "now"; resetMinMax(false);
+    syncKeys();
+    // 起動時の全点灯セルフテスト
+    lcd.classList.add("test");
+    await new Promise((r) => setTimeout(r, 700));
+    lcd.classList.remove("test");
+    if (mode === "idle") return;   // セルフテスト中に電源OFFされた
+    updateDisplay();
+    keepAwake();
     if (await startSensor()) return;
     try {
       await startCamera();
+      updateDisplay();
     } catch (e) {
-      setStatus(`<span class="err">カメラを起動できませんでした（${e.name || e}）。カメラの許可と、HTTPSで開いているかを確認してください。</span>`);
-      stop();
+      setStatus(`<span class="err">カメラを起動できませんでした（${e.name || e}）。カメラの許可と、HTTPS で開いているかを確認してください。</span>`);
+      drawText(" Err");
+      setTimeout(powerOff, 1500);
     }
   }
 
-  function stop() {
+  function powerOff() {
     stopCamera();
     if (sensor) { try { sensor.stop(); } catch {} sensor = null; }
-    mode = "idle";
-    $("startBtn").hidden = false;
-    $("ctrl").hidden = true;
-    $("led").classList.remove("on");
-    $("srcLabel").textContent = "STANDBY";
+    if (wakeLock) { wakeLock.release().catch(() => {}); wakeLock = null; }
+    mode = "idle"; ema = null;
+    clearLcd();
+    $("pled").classList.remove("on");
+    $("kPowerSub").textContent = "測定開始";
+    updateInfo(null);
   }
 
-  function resetMinMax() {
+  function resetMinMax(notify = true) {
     minV = Infinity; maxV = -Infinity;
-    $("min").textContent = "---"; $("max").textContent = "---";
+    if (notify) { toast("MAX / MIN を消去しました"); updateDisplay(); }
   }
 
-  // ---- イベント ----
-  $("startBtn").onclick = start;
-  $("stopBtn").onclick = stop;
-  $("resetBtn").onclick = resetMinMax;
-  $("holdBtn").onclick = () => {
-    hold = !hold;
-    $("holdBtn").classList.toggle("active", hold);
-    setInd("indHold", hold);
+  function syncKeys() {
+    $("kHold").classList.toggle("lit", hold);
+    $("kMax").classList.toggle("lit", dispMode !== "now");
+    $("kLight").classList.toggle("lit", lcd.classList.contains("backlit"));
+  }
+
+  // ---- 記録 ----
+  let log = [];
+  try { log = JSON.parse(store.get("luxLog", "[]")) || []; } catch { log = []; }
+  function saveLog() { store.set("luxLog", JSON.stringify(log.slice(0, 100))); }
+  function renderLog() {
+    const ul = $("log");
+    ul.innerHTML = log.map((r) => {
+      const d = new Date(r.t);
+      const ts = `${d.getMonth() + 1}/${d.getDate()} ${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
+      return `<li><time>${ts}</time><span class="p">${placeOf(r.lux).name}</span><span class="v">${fmt(r.lux)} lx</span></li>`;
+    }).join("");
+    $("logEmpty").hidden = log.length > 0;
+    $("logActions").hidden = log.length === 0;
+  }
+  function record() {
+    const v = shownValue();
+    if (mode === "idle" || v === null || !isFinite(v)) { toast("測定中に REC を押してください"); return; }
+    log.unshift({ t: Date.now(), lux: Math.round(v * 100) / 100 });
+    saveLog(); renderLog();
+    ann("aMem", true); setTimeout(() => ann("aMem", false), 800);
+    buzz([10, 40, 10]);
+    toast(`${fmt(v)} lx を記録しました`);
+  }
+
+  // ---- 共有 ----
+  async function share(text) {
+    const url = "https://m-masaki72.github.io/web-lux-meter/";
+    try {
+      if (navigator.share) { await navigator.share({ title: "デジタル照度計 LX-26", text, url }); return; }
+      await navigator.clipboard.writeText(`${text}\n${url}`);
+      toast("クリップボードにコピーしました");
+    } catch (e) {
+      if (e && e.name !== "AbortError") toast("共有できませんでした");
+    }
+  }
+
+  // ---- キー操作 ----
+  document.querySelectorAll(".key").forEach((k) => k.addEventListener("pointerdown", () => buzz()));
+
+  $("kPower").onclick = () => (mode === "idle" ? powerOn() : powerOff());
+  $("kHold").onclick = () => {
+    if (mode === "idle") return;
+    hold = !hold; heldVal = hold ? shownValue() : null;
+    syncKeys(); updateDisplay();
   };
-  $("flipBtn").onclick = async () => {
-    if (mode === "sensor") return;
+  // MAX/MIN：短押しで表示切替、長押しで消去
+  let pressTimer = 0, longPressed = false;
+  $("kMax").addEventListener("pointerdown", () => {
+    longPressed = false;
+    pressTimer = setTimeout(() => { longPressed = true; buzz(30); resetMinMax(); }, 700);
+  });
+  ["pointerup", "pointerleave", "pointercancel"].forEach((ev) =>
+    $("kMax").addEventListener(ev, () => clearTimeout(pressTimer)));
+  $("kMax").onclick = () => {
+    if (longPressed || mode === "idle") return;
+    dispMode = dispMode === "now" ? "max" : dispMode === "max" ? "min" : "now";
+    syncKeys(); updateDisplay();
+  };
+  $("kUnit").onclick = () => {
+    unit = unit === "lx" ? "fc" : "lx";
+    store.set("luxUnit", unit);
+    updateDisplay();
+    toast(unit === "lx" ? "単位：ルクス（lx）" : "単位：フートカンデラ（fc）");
+  };
+  $("kLight").onclick = () => { lcd.classList.toggle("backlit"); syncKeys(); };
+  $("kCam").onclick = async () => {
+    if (mode === "sensor") { toast("照度センサーで測定中です"); return; }
     facing = facing === "user" ? "environment" : "user";
-    try { await startCamera(); } catch (e) { setStatus(`<span class="err">カメラ切替に失敗：${e.name || e}</span>`); }
+    toast(facing === "user" ? "前カメラに切り替え" : "後カメラに切り替え");
+    if (mode === "idle") return;
+    try { await startCamera(); updateDisplay(); }
+    catch (e) { setStatus(`<span class="err">カメラ切替に失敗しました（${e.name || e}）</span>`); }
   };
+  $("kRec").onclick = record;
+
+  $("shareBtn").onclick = () => {
+    const v = shownValue();
+    const text = mode !== "idle" && v !== null && isFinite(v)
+      ? `いまの明るさは約 ${fmt(v)} lx（${placeOf(v).name}くらい）でした。※スマホカメラによる参考値`
+      : "スマホのカメラで明るさ（ルクス）を測れるWeb照度計";
+    share(text);
+  };
+  $("logShare").onclick = () => {
+    const lines = log.slice(0, 20).map((r) => {
+      const d = new Date(r.t);
+      return `${d.getMonth() + 1}/${d.getDate()} ${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}  ${fmt(r.lux)} lx（${placeOf(r.lux).name}）`;
+    });
+    share(`照度の測定記録（参考値）\n${lines.join("\n")}`);
+  };
+  $("logClear").onclick = () => {
+    if (!confirm("測定記録をすべて削除しますか？")) return;
+    log = []; saveLog(); renderLog();
+  };
+
+  // ---- 補正 ----
   $("calibBtn").onclick = () => {
     const known = parseFloat($("knownLux").value);
-    if (!(known > 0) || !(ema > 0)) return;
+    if (!(known > 0)) { toast("正しい照度を入力してください"); return; }
+    if (!(ema > 0)) { toast("測定中に補正してください"); return; }
     calib = calib * known / ema;
     ema = known;
     store.set(calibKey(), String(calib));
     $("calibInput").value = calib.toFixed(3);
+    toast(`補正しました（係数 ${calib.toFixed(3)}）`);
   };
   $("calibInput").onchange = () => {
     const v = parseFloat($("calibInput").value);
@@ -562,8 +1000,25 @@
   };
   $("calibReset").onclick = () => { calib = 1; store.set(calibKey(), "1"); $("calibInput").value = "1.000"; };
 
+  // ---- アプリ化（PWA） ----
+  let installEvt = null;
+  window.addEventListener("beforeinstallprompt", (e) => {
+    e.preventDefault(); installEvt = e; $("installBtn").hidden = false;
+  });
+  $("installBtn").onclick = async () => {
+    if (!installEvt) return;
+    installEvt.prompt();
+    await installEvt.userChoice.catch(() => {});
+    installEvt = null; $("installBtn").hidden = true;
+  };
+  window.addEventListener("appinstalled", () => { $("installBtn").hidden = true; toast("インストールしました"); });
+
+  if ("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost")) {
+    navigator.serviceWorker.register("sw.js").catch(() => {});
+  }
+
   document.addEventListener("visibilitychange", () => {
-    if (document.hidden && mode !== "idle") stop();
+    if (document.hidden && mode !== "idle") powerOff();
   });
 
   // ---- 初期描画 ----
@@ -571,16 +1026,19 @@
     `<li><span>${p.name}</span><span class="lx">${p.hi === Infinity ? fmt(p.lo) + "〜" : fmt(p.lo) + "〜" + fmt(p.hi)}</span></li>`
   ).join("");
   const sc = $("scenes");
-  sc.innerHTML = SCENES.map((s) => `<button data-id="${s.id}">${s.name}</button>`).join("");
+  sc.innerHTML = SCENES.map((s) => `<button class="chip" data-id="${s.id}">${s.name}</button>`).join("");
   const markScene = () => [...sc.children].forEach((b) => b.classList.toggle("active", b.dataset.id === scene));
   sc.onclick = (e) => {
     const b = e.target.closest("button"); if (!b) return;
     scene = b.dataset.id; markScene();
-    renderJudge(ema);
+    const v = mode === "idle" ? null : shownValue();
+    renderJudge(v !== null && isFinite(v) ? v : null);
   };
   markScene();
   renderJudge(null);
+  renderLog();
   loadCalib();
+  clearLcd();
 })();
 </script>
 </body>
