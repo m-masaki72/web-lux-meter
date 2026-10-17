@@ -7,7 +7,7 @@
 
 ## 構成
 
-- `index.html` — HTML/CSS/JS をすべて1ファイルに収録。外部ライブラリなし（Google Fonts の Share Tech Mono のみ）
+- `index.html` — HTML/CSS/JS をすべて1ファイルに収録。外部ライブラリ・外部リクエストなし。液晶風の等幅フォントは `fonts/` に置いた Share Tech Mono の ASCII サブセット（SIL OFL 1.1、CSS 上は別名 `LX Mono`）
   - `PLACES` / `SCENES`：場所の早見表と時間帯・用途の判定基準
   - 測定：`startSensor()`（AmbientLightSensor）→ 失敗したら `startCamera()`。露出を手動制御できれば `mode = "manual"`、できなければ `"auto"`（相対値、LCD に REL）
   - 表示：7セグは `buildSeg()` で SVG を生成し `drawText()` で点灯。バーグラフは `drawBar()`
@@ -25,7 +25,7 @@
 - 照度は「あくまで参考値」である旨の注意書きを画面上（本体直下と末尾の注記）に必ず残す
 - JSON-LD の FAQPage の内容は、ページ内「よくある質問」の文言と一致させる（片方だけ変えない）。英語版の FAQ は `T.en.faqBody`
 - 本体（受光部〜POWER）は縦持ちスマホの1画面目に収める。受光部の大きさ `--ring` を画面の高さから決めているので、本体の高さを変えたら 360×640 と 390×844 で確認する
-- URL を変えるときは canonical・OGP・JSON-LD・共有テキスト内の URL もまとめて更新する
+- URL を変えるときは canonical・hreflang・OGP・JSON-LD・共有テキスト・`sitemap.xml` の URL もまとめて更新する。大きく内容を変えたら `sitemap.xml` の `lastmod` も更新
 - 主な対象はスマホ縦画面（幅 360〜430px）。変更後はスマホ幅で横スクロールが出ないことを確認する
 
 ## 動作確認

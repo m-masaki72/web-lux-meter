@@ -101,11 +101,14 @@
 }
 </script>
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" onload="this.onload=null;this.rel='stylesheet'">
-<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap"></noscript>
+<link rel="preload" href="fonts/share-tech-mono-sub.woff2" as="font" type="font/woff2" crossorigin>
 <style>
+  /* Share Tech Mono（SIL OFL 1.1, fonts/OFL.txt）の ASCII サブセット。予約フォント名を避けて別名で読み込む */
+  @font-face {
+    font-family: "LX Mono"; font-style: normal; font-weight: 400; font-display: swap;
+    src: url(fonts/share-tech-mono-sub.woff2) format("woff2");
+    unicode-range: U+20-7E, U+B7, U+D7, U+2013;
+  }
   :root {
     --bg: #15171a; --bg-hi: #23272d;
     --card: #1f2328; --card-edge: #2d333a;
@@ -117,7 +120,7 @@
     --ok: #5cc98a; --warn: #f2b544; --bad: #ef6b5b;
     --series: #f2bd2a; --band: rgba(92, 201, 138, .16); --grid: rgba(255,255,255,.08);
     --toast-bg: #f2f2f0; --toast-fg: #1b1d20;
-    --mono: "Share Tech Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+    --mono: "LX Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
     /* 縦持ちで本体が1画面に収まるよう、受光部の大きさを画面の高さから決める */
     --ring: clamp(64px, calc(100vh - 540px), 128px);
     color-scheme: dark;
@@ -333,7 +336,7 @@
   .key.power small { color: #ffe1dc; display: inline; margin-left: 6px; font-size: 11px; }
   .pwr { width: 15px; height: 15px; vertical-align: -2px; margin-right: 6px; }
   .key.power:active { box-shadow: 0 1px 0 #641a14, inset 0 1px 0 rgba(255,255,255,.12); }
-  .spec { text-align: center; font: 9.5px var(--mono); letter-spacing: .12em; color: #959da6; margin-top: 12px; }
+  .spec { text-align: center; font: 9.5px var(--mono); letter-spacing: .05em; color: #959da6; margin-top: 12px; padding: 0 24px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
   /* 低い画面（縦の短いスマホ）では装飾を詰める */
   @media (max-height: 780px) { .spec { display: none; } }
@@ -376,6 +379,7 @@
   .verdict { font-weight: 800; font-size: 18px; }
   .range { color: var(--muted); font-size: 12.5px; }
   .tip { margin: 6px 0 0; font-size: 13px; }
+  .adv { margin: 8px 0 0; padding: 8px 10px; border-radius: 10px; background: var(--chip); border: 1px solid var(--chip-edge); font-size: 13px; }
   .cct { margin: 8px 0 0; padding-top: 8px; border-top: 1px solid var(--card-edge); font-size: 13px; }
 
   /* 記録 */
@@ -528,7 +532,7 @@
         <button class="key wide" id="kRec"><i class="rec-dot"></i>REC<small data-i18n="kRecSub">いまの値を記録</small></button>
         <button class="key power" id="kPower"><svg class="pwr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M12 3v8"/><path d="M6.3 6.8a8 8 0 1 0 11.4 0"/></svg>POWER<small id="kPowerSub">測定開始</small></button>
       </div>
-      <div class="spec">AUTO RANGE 0.1–99,999 lx · CCT · CAMERA SENSING</div>
+      <div class="spec">AUTO RANGE 0.1–99,999 lx · CCT</div>
     </div>
   </div>
 
@@ -736,6 +740,10 @@
       vWait: "測定待ち", vDark: "暗すぎ", vBright: "明るすぎ", vOk: "ちょうどいい",
       rangeAbove: (a) => `${a} lx 以上`, rangeBelow: (b) => `${b} lx 以下`, rangeBetween: (a, b) => `${a}〜${b} lx`,
       rangeLabel: "目安",
+      advDim: (p, b) => `💡 いまより<b>約${p}%暗く</b>すると目安（${b} lx）に入ります。調光できない照明なら、1灯消すかスタンドなど小さな照明に切り替えてみてください。`,
+      advOff: (b) => `💡 目安（${b} lx）よりずっと明るいです。メインの照明を消して、足元灯や間接照明だけにしてみてください。`,
+      advBright: (p, a) => `💡 いまより<b>約${p}%明るく</b>すると目安（${a} lx）に入ります。`,
+      advTimes: (x, a) => `💡 目安（${a} lx）まで<b>約${x}倍の明るさ</b>が必要です。照明を足すか、窓際や手元にスタンドを置いてみてください。`,
       cctLine: (k, name) => `色温度 約 ${k}K（${name}）`,
       cctNames: ["電球色", "温白色", "白色", "昼白色", "昼光色"],
       cctWarmTip: "夜は 3,000K 以下の暖色の光がおすすめです。",
@@ -809,6 +817,10 @@
       vWait: "Waiting", vDark: "Too dark", vBright: "Too bright", vOk: "Just right",
       rangeAbove: (a) => `${a} lx or more`, rangeBelow: (b) => `${b} lx or less`, rangeBetween: (a, b) => `${a}–${b} lx`,
       rangeLabel: "Target",
+      advDim: (p, b) => `💡 Dim it by <b>about ${p}%</b> to reach the target (${b} lx). If your light can't be dimmed, turn one off or switch to a smaller lamp.`,
+      advOff: (b) => `💡 Much brighter than the target (${b} lx). Turn off the main light and use only a footlight or indirect lighting.`,
+      advBright: (p, a) => `💡 Make it <b>about ${p}% brighter</b> to reach the target (${a} lx).`,
+      advTimes: (x, a) => `💡 You need <b>about ${x}× more light</b> to reach the target (${a} lx). Add a light, move near a window, or use a desk lamp.`,
       cctLine: (k, name) => `Color temperature ≈ ${k} K (${name})`,
       cctNames: ["warm (incandescent)", "warm white", "white", "neutral white", "daylight"],
       cctWarmTip: "At night, warm light of 3,000 K or less is recommended.",
@@ -1025,6 +1037,19 @@
       else if (v > s.hi) { verdict = t("vBright"); color = "var(--bad)"; }
       else { verdict = t("vOk"); color = "var(--ok)"; }
     }
+    // 目安の範囲までどれだけ明るさを変えればいいか（目安の端まで）
+    let advHtml = "";
+    if (v !== null && v > 0) {
+      let a = "";
+      if (v > s.hi) {
+        const p = Math.round((1 - s.hi / v) * 100);
+        a = p >= 95 ? t("advOff", n(s.hi)) : t("advDim", Math.max(5, Math.ceil(p / 5) * 5), n(s.hi));
+      } else if (v < s.lo) {
+        const x = s.lo / v;
+        a = x >= 2 ? t("advTimes", x >= 10 ? Math.round(x) : x.toFixed(1), n(s.lo)) : t("advBright", Math.max(5, Math.ceil((x - 1) * 20) * 5), n(s.lo));
+      }
+      if (a) advHtml = `<p class="adv">${a}</p>`;
+    }
     let cctHtml = "";
     const k = v !== null && running() ? shownCct() : null;
     if (k) {
@@ -1036,7 +1061,7 @@
     }
     $("judge").innerHTML =
       `<div class="verdict" style="color:${color}">${sname(s)}：${verdict}</div>` +
-      `<div class="range">${t("rangeLabel")} ${range}</div><p class="tip">${s[lang][1]}</p>${cctHtml}`;
+      `<div class="range">${t("rangeLabel")} ${range}</div>${advHtml}<p class="tip">${s[lang][1]}</p>${cctHtml}`;
   }
 
   function setStatus(html) { $("status").innerHTML = html; }

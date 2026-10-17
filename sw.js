@@ -1,6 +1,6 @@
 // オフライン対応用 Service Worker
 // アプリ本体を更新したら CACHE のバージョンを上げる
-const CACHE = "lux-meter-v4";
+const CACHE = "lux-meter-v5";
 const ASSETS = [
   "./",
   "index.html",
@@ -9,6 +9,7 @@ const ASSETS = [
   "icons/icon-192.png",
   "icons/icon-512.png",
   "icons/apple-touch-icon.png",
+  "fonts/share-tech-mono-sub.woff2",
 ];
 
 self.addEventListener("install", (e) => {
