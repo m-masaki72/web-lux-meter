@@ -12,6 +12,8 @@
   - 測定：`startSensor()`（AmbientLightSensor）→ 失敗したら `startCamera()`。露出を手動制御できれば `mode = "manual"`、できなければ `"auto"`（相対値、LCD に REL）
   - 表示：7セグは `buildSeg()` で SVG を生成し `drawText()` で点灯。バーグラフは `drawBar()`
   - 非同期の起動処理は `sess`（世代番号）で管理。電源OFF・カメラ切替で `sess++` し、await 後に `my !== sess` なら中断する
+  - 画面が隠れたら `powerOff()`、戻ったら `powerOn(true)` で自動再開（復帰時は置き方の案内トーストを省く）
+  - `mode === "auto"`（REL）では場所の目安・用途の判定・調光アドバイス・補正・共有文の場所名を出さない（自動露出で明るさが揃えられた値のため）
   - 色温度：ホワイトバランスを手動 6500K 付近に固定できた端末だけ `cctOf()`（McCamy 近似）で推定
   - 文言は `T.ja` / `T.en`。日本語の静的文言は HTML の `data-i18n` 要素から起動時に取り込むので、HTML 側を正とする
   - テーマは `data-theme`（未指定ならシステム設定）。色は CSS 変数で、ライト用は2か所（`[data-theme=light]` とメディアクエリ）を揃えて直す

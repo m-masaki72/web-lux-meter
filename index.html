@@ -533,7 +533,7 @@
 
   <details id="calibSec">
     <summary data-i18n="calibSum">補正（キャリブレーション）</summary>
-    <p data-i18n="calibIntro">スマホの機種ごとにレンズやセンサーの特性が違います。正確な照度計がある場所や、明るさの分かっている場所で一度合わせると精度が上がります。補正値は機種とカメラ（前／後・照度センサー）ごとに保存されます。</p>
+    <p data-i18n="calibIntro">スマホの機種ごとにレンズやセンサーの特性が違います。正確な照度計がある場所や、明るさの分かっている場所で一度合わせると精度が上がります。補正値は機種とカメラ（前／後・照度センサー）ごとに保存されます。照度計がなければ、Android の照度センサーの値を表示するアプリの数値に合わせる方法もあります（目安程度）。</p>
     <div class="calib-model" id="calibModel"></div>
     <div class="calib-row">
       <input class="field num" id="knownLux" type="number" inputmode="decimal" min="0" data-i18n-ph="knownPh" placeholder="正しい値" data-i18n-aria="knownPh" aria-label="正しい値">
@@ -656,7 +656,12 @@
       tCodeBad: "補正コードを読み取れませんでした",
       tCodeOk: "補正コードを読み込みました",
       tCodeOther: (m) => `別の機種（${m}）の補正コードを読み込みました`,
-      vWait: "測定待ち", vDark: "🌑 暗すぎ", vBright: "🔆 明るすぎ", vOk: "✅ ちょうどいい",
+      vWait: "測定待ち", vDark: "🌑 暗すぎ", vBright: "🔆 明るすぎ", vOk: "✅ ちょうどいい", vRel: "📏 判定できません（相対値）",
+      relNote: "この端末ではカメラが明るさを自動で揃えてしまうため、表示は<b>相対値</b>です。目安との比較や調光のアドバイスは出せません。Android の Chrome で開くと照度として測れます。",
+      placeRel: "相対値のため判定なし",
+      tPlaceFront: "📱 画面を上にして机や床に置いてください。レンズに白い紙をかぶせると照度計に近い値になります",
+      tPlaceRear: "📱 背面カメラを測りたい方向に向けてかざしてください",
+      tCalibRel: "相対値（REL）表示中は補正できません。露出を制御できる端末でお試しください",
       rangeAbove: (a) => `${a} lx 以上`, rangeBelow: (b) => `${b} lx 以下`, rangeBetween: (a, b) => `${a}〜${b} lx`,
       rangeLabel: "目安",
       advDim: (p, b) => `💡 いまより<b>約${p}%暗く</b>すると目安（${b} lx）に入ります。調光できない照明なら、1灯消すかスタンドなど小さな照明に切り替えてみてください。`,
@@ -688,7 +693,7 @@
       installSum: "Add to home screen (use as an app)",
       installBody: "<li><b>Android (Chrome)</b>: tap “Install” above, or menu → “Install app”. Long-press the icon and choose “Measure” to start measuring right away.</li><li><b>iPhone (Safari)</b>: Share → “Add to Home Screen”.</li><li>Once opened, it also starts offline.</li>",
       calibSum: "Calibration",
-      calibIntro: "Lenses and sensors differ between phone models. Calibrating once against a real lux meter, or a place with known brightness, improves accuracy. The factor is saved per model and per sensor (front / rear camera, light sensor).",
+      calibIntro: "Lenses and sensors differ between phone models. Calibrating once against a real lux meter, or a place with known brightness, improves accuracy. The factor is saved per model and per sensor (front / rear camera, light sensor). Without a lux meter, you can roughly match the reading of an Android app that shows the phone's light sensor value.",
       knownPh: "True value", knownSuffix: "lx (true value)", calibBtn: "Calibrate", calibCoef: "Factor", calibReset: "Reset",
       codeIntro: "There is no official per-model calibration data. You can exchange a “calibration code” with people who use the same model to share results.",
       codeShare: "Share calibration code", codePh: "Paste calibration code", codeLoad: "Load",
@@ -724,7 +729,12 @@
       tCodeBad: "Couldn't read the calibration code",
       tCodeOk: "Calibration code loaded",
       tCodeOther: (m) => `Loaded a code from another model (${m})`,
-      vWait: "Waiting", vDark: "🌑 Too dark", vBright: "🔆 Too bright", vOk: "✅ Just right",
+      vWait: "Waiting", vDark: "🌑 Too dark", vBright: "🔆 Too bright", vOk: "✅ Just right", vRel: "📏 Can't judge (relative value)",
+      relNote: "On this device the camera evens out brightness automatically, so the reading is a <b>relative value</b>. Target comparisons and dimming advice aren't available. Open this page in Chrome on Android to measure actual illuminance.",
+      placeRel: "Relative value, no match",
+      tPlaceFront: "📱 Place the phone face-up on a desk or floor. Covering the lens with white paper gives readings closer to a real lux meter",
+      tPlaceRear: "📱 Point the rear camera toward what you want to measure",
+      tCalibRel: "Calibration isn't available while showing a relative value (REL). Try a device that supports exposure control",
       rangeAbove: (a) => `${a} lx or more`, rangeBelow: (b) => `${b} lx or less`, rangeBetween: (a, b) => `${a}–${b} lx`,
       rangeLabel: "Target",
       advDim: (p, b) => `💡 Dim it by <b>about ${p}%</b> to reach the target (${b} lx). If your light can't be dimmed, turn one off or switch to a smaller lamp.`,
@@ -911,8 +921,10 @@
   function updateInfo(v) {
     const hasV = v !== null && isFinite(v);
     const p = hasV ? placeOf(v) : null;
-    $("placeNow").textContent = p ? `≒ ${p.ic} ${pname(p)}` : "—";
-    [...$("places").children].forEach((li, i) => li.classList.toggle("hit", PLACES[i] === p));
+    // 相対値（REL）は自動露出で明るさが揃えられた値なので、場所の目安には当てはめない
+    const rel = mode === "auto";
+    $("placeNow").textContent = rel && hasV ? t("placeRel") : p ? `≒ ${p.ic} ${pname(p)}` : "—";
+    [...$("places").children].forEach((li, i) => li.classList.toggle("hit", !rel && PLACES[i] === p));
     renderJudge(hasV ? v : null);
     updateMini(hasV ? v : null);
   }
@@ -933,14 +945,16 @@
     const n = (x) => x.toLocaleString("en-US");
     const range = s.hi === Infinity ? t("rangeAbove", n(s.lo)) : s.lo === 0 ? t("rangeBelow", n(s.hi)) : t("rangeBetween", n(s.lo), n(s.hi));
     let verdict = t("vWait"), color = "var(--muted)";
-    if (v !== null) {
+    const rel = v !== null && mode === "auto";
+    if (rel) verdict = t("vRel");
+    else if (v !== null) {
       if (v < s.lo) { verdict = t("vDark"); color = "var(--warn)"; }
       else if (v > s.hi) { verdict = t("vBright"); color = "var(--bad)"; }
       else { verdict = t("vOk"); color = "var(--ok)"; }
     }
     // 目安の範囲までどれだけ明るさを変えればいいか（目安の端まで）
-    let advHtml = "";
-    if (v !== null && v > 0) {
+    let advHtml = rel ? `<p class="adv">${t("relNote")}</p>` : "";
+    if (!rel && v !== null && v > 0) {
       let a = "";
       if (v > s.hi) {
         const p = Math.round((1 - s.hi / v) * 100);
@@ -1219,7 +1233,7 @@
     try { if ("wakeLock" in navigator) wakeLock = await navigator.wakeLock.request("screen"); } catch {}
   }
 
-  async function powerOn() {
+  async function powerOn(resumed = false) {
     const my = ++sess;
     clearTimeout(errTimer);
     mode = "starting";
@@ -1238,7 +1252,11 @@
     if (await startSensor(my)) return;
     if (my !== sess) return;
     try {
-      if (await startCamera(my)) updateDisplay();
+      if (await startCamera(my)) {
+        updateDisplay();
+        // 置き方で値が大きく変わるので、最初に一言案内する（復帰時は省く）
+        if (!resumed) toast(facing === "user" ? t("tPlaceFront") : t("tPlaceRear"));
+      }
     } catch (e) {
       if (my !== sess) return;
       stopCamera();
@@ -1422,13 +1440,14 @@
 
   $("shareBtn").onclick = () => {
     const v = shownValue();
-    share(running() && v !== null && isFinite(v) ? t("shareNow", fmtU(v), pname(placeOf(v))) : t("shareApp"));
+    share(running() && mode !== "auto" && v !== null && isFinite(v) ? t("shareNow", fmtU(v), pname(placeOf(v))) : t("shareApp"));
   };
   // ---- 補正 ----
   $("calibBtn").onclick = () => {
     const known = parseFloat($("knownLux").value);
     if (!(known > 0)) { toast(t("tCalibNeedLux")); return; }
     if (!running() || !(ema > 0)) { toast(t("tCalibNeedRun")); return; }
+    if (mode === "auto") { toast(t("tCalibRel")); return; }
     saveCalib(calib * known / ema);
     ema = known; minV = Infinity; maxV = -Infinity;
     toast(t("tCalibDone", calib.toFixed(3)));
@@ -1493,8 +1512,15 @@
     navigator.serviceWorker.register("sw.js").catch(() => {});
   }
 
+  // 裏に回るとカメラは OS に止められるので一度切り、戻ってきたら測定を再開する
+  let resume = false;
   document.addEventListener("visibilitychange", () => {
-    if (document.hidden && mode !== "idle") powerOff();
+    if (document.hidden) {
+      if (mode !== "idle") { resume = true; powerOff(); }
+    } else if (resume) {
+      resume = false;
+      powerOn(true);
+    }
   });
 
   // 液晶が画面外に出たらアプリバーに小さく値を出す
