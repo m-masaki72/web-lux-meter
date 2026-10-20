@@ -62,6 +62,10 @@ GitHub Pages（`main` ブランチ直下）で公開しています。push す�
 
 目安の数値は JIS Z 9110（照明基準総則）の推奨照度や、睡眠・概日リズムに関する一般的な推奨値をもとにした参考値です。
 
+## 紹介ページ
+
+- [制作物ページ（Mori Lab）](https://morilab-garage.com/projects/web-lux-meter/)
+
 ## ライセンス
 
 [MIT](LICENSE)（`fonts/` のフォントは [SIL Open Font License 1.1](fonts/OFL.txt)）
