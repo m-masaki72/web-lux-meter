@@ -1,6 +1,6 @@
 // オフライン対応用 Service Worker
 // アプリ本体を更新したら CACHE のバージョンを上げる
-const CACHE = "lux-meter-v8";
+const CACHE = "lux-meter-v9";
 const ASSETS = [
   "./",
   "index.html",

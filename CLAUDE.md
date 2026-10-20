@@ -19,6 +19,7 @@
   - テーマは `data-theme`（未指定ならシステム設定）。色は CSS 変数で、ライト用は2か所（`[data-theme=light]` とメディアクエリ）を揃えて直す
   - 状態の保存は localStorage（補正係数 `luxCal:<機種>:<user|environment|als>`、単位 `luxUnit`、言語 `luxLang`、テーマ `luxTheme`）
   - ショートカット：`?start=1` で自動測定開始
+  - 英語表示（`?lang=en`）は JS で切り替えるだけで静的 HTML は日本語のままなので、canonical は常に `/`。`?lang=en` は hreflang・sitemap に載せない（載せると重複ページ扱いになる）
 - `sw.js` — Service Worker。**アセットや index.html を変えたら `CACHE` のバージョンを上げる**
 - `manifest.webmanifest` / `icons/` / `og.png` — PWA・SNS 用。アイコン PNG と og.png は `icons/icon.svg` などから puppeteer で書き出したもの
 
@@ -27,7 +28,7 @@
 - 照度は「あくまで参考値」である旨の注意書きを画面上（本体直下と末尾の注記）に必ず残す
 - JSON-LD の FAQPage の内容は、ページ内「よくある質問」の文言と一致させる（片方だけ変えない）。英語版の FAQ は `T.en.faqBody`
 - 本体（受光部〜POWER）は縦持ちスマホの1画面目に収める。受光部の大きさ `--ring` を画面の高さから決めているので、本体の高さを変えたら 360×640 と 390×844 で確認する
-- URL を変えるときは canonical・hreflang・OGP・JSON-LD・共有テキスト・`sitemap.xml` の URL もまとめて更新する。大きく内容を変えたら `sitemap.xml` の `lastmod` も更新
+- URL を変えるときは canonical・OGP・JSON-LD・共有テキスト・`sitemap.xml` の URL もまとめて更新する。大きく内容を変えたら `sitemap.xml` の `lastmod` も更新
 - 主な対象はスマホ縦画面（幅 360〜430px）。変更後はスマホ幅で横スクロールが出ないことを確認する
 
 ## 動作確認
